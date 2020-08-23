@@ -1,13 +1,40 @@
 Elasticsearch-SpringBoot
 
+
+<p align="center">
+    <img width="300px" src="image/til.PNG" align="center" alt="Membership" />
+    <h2 align="center">Today Youngjun Learned</h2>
+    <p align="center">공부한거 까먹지 말고 적어놓자😆</p>
+</p>
+
+<p align="center">
+    <a href="https://dev-youngjun.tistory.com/">
+        <img alt="Blog" src="https://img.shields.io/badge/-Spring-68AD3A?logo=Spring"/>
+    </a>
+    <a href="https://dev-youngjun.tistory.com/">
+        <img alt="Blog" src="https://img.shields.io/badge/-Elasticsearch-E7B933?logo=Elasticsearch"/>
+    </a>
+    <a href="https://dev-youngjun.tistory.com/">
+        <img alt="Blog" src="https://img.shields.io/badge/-Spring-68AD3A?logo=Spring"/>
+    </a>
+    <a href="https://github.com/jun108059/Elasticsearch-SpringBoot">
+    <img alt="hits" src="http://hits.dwyl.com/jun108059/Elasticsearch-SpringBoot"/>
+    </a>
+    <br />
+    <br />
+    <a>
+</p>
+
+--- 
+
 - ElasticSearch 기반 검색엔진 구축 [https://esbook.kimjmin.net/](https://esbook.kimjmin.net/)
 - 관계형 DB에 저장된 Data 색인 - 빠르고 쉽게 검색 엔진 활용할 수 있는 시스템 구축
 
-# 프로젝트 개요
+## 프로젝트 개요
 
 - ElasticSearch 기반의 검색엔진을 구축 후 관계형 DB에 저장된 Data(ex. QnA, 공지사항 등,,,)에 대해 데이터를 색인하여 빠르고 쉽게 검색 엔진을 활용할 수 있는 시스템을 구축한다.
 
-### **📕 기술 요구 사항(**Technical Requirements Specification)
+### 📕 기술 요구 사항(Technical Requirements Specification)
 
 - DB 데이터 색인 및 벌크
 - 검색 Rest API 제공
