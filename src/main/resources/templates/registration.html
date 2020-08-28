@@ -20,20 +20,18 @@
             <form class="needs-validation" novalidate th:action="@{/signup}" method="POST">
 
                 <div class="mb-3">
-                    <label for="servi">서비스 ID</label> 
-                    <input type="text" class="form-control" id="real-name" placeholder="" value="" required name="user-real-name">
-                    <div class="invalid-feedback">유효한 이름을 입력해야합니다.</div>
+                    <label for="service_id">서비스 ID</label> 
+                    <input type="text" class="form-control" id="service_id" placeholder="" value="" required name="service_id">
                 </div>
 
                 <div class="mb-3">
-                    <label for="email">이메일</label>
-                    <input type="email" class="form-control" id="email" placeholder="you@example.com" name="user-email">
-                    <div class="invalid-feedback">올바른 이메일을 입력하세요.</div>
+                    <label for="service_explain">서비스 설명</label>
+                    <input type="text" class="form-control" id="service_explain" placeholder="서비스 설명" name="service_explain">
                 </div>
 
                 <div class="mb-3">
-                    <label for="address">좋아하는 음식</label> <input type="text" class="form-control" id="food" placeholder="예) 치킨" required name="user-food">
-                    <div class="invalid-feedback">좋아하는 음식을 입력하세요.</div>
+                    <label for="bulk_query">Bulk Query</label> <input type="text" class="form-control" id="bulk_query" placeholder="query를 작성하세요" required name="bulk_query">
+                    <div class="invalid-feedback"></div>
                 </div>
 
                 <hr class="mb-4">
