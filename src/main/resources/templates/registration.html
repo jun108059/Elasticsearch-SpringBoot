@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" href="/board.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>서비스 등록</h2>
+            <p class="lead">서비스를 등록하세요👋 </p>
+        </div>
+
+        <div class="col-md-12 order-md-1">
+            <h4 class="mb-3">Form</h4>
+            <form class="needs-validation" novalidate th:action="@{/signup}" method="POST">
+
+                <div class="mb-3">
+                    <label for="servi">서비스 ID</label> 
+                    <input type="text" class="form-control" id="real-name" placeholder="" value="" required name="user-real-name">
+                    <div class="invalid-feedback">유효한 이름을 입력해야합니다.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email">이메일</label>
+                    <input type="email" class="form-control" id="email" placeholder="you@example.com" name="user-email">
+                    <div class="invalid-feedback">올바른 이메일을 입력하세요.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address">좋아하는 음식</label> <input type="text" class="form-control" id="food" placeholder="예) 치킨" required name="user-food">
+                    <div class="invalid-feedback">좋아하는 음식을 입력하세요.</div>
+                </div>
+
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">가입하기</button>
+                <hr class="mb-4">
+
+                <footer th:replace="/fragments/semantic :: footer"></footer>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
