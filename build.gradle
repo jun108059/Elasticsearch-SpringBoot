@@ -14,10 +14,12 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	// https://mvnrepository.com/artifact/org.webjars/bootstrap
+	implementation group: 'org.webjars', name: 'bootstrap', version: '4.5.2'
 	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
 	
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
