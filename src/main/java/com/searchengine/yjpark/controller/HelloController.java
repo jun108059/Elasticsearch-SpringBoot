@@ -32,12 +32,16 @@ public class HelloController {
     @GetMapping("hello-api")
     @ResponseBody
     public Hello helloApi(@RequestParam("name") String name) {
+        // @ResponseBody를 사용하고
+        // 객체를 반환하면 객체가 JSON으로 반환
         Hello hello = new Hello();
         hello.setName(name);
         return hello;
     }
 
     static class Hello {
+        // Java Bean 표준 규약
+        // Getter Setter - 프로퍼티 접근 방식
         private String name;
 
         public String getName() {
