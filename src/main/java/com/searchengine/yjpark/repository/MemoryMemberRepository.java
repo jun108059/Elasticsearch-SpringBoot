@@ -2,10 +2,7 @@ package com.searchengine.yjpark.repository;
 
 import com.searchengine.yjpark.domain.Member;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class MemoryMemberRepository implements MemberRepository{
 
@@ -26,17 +23,29 @@ public class MemoryMemberRepository implements MemberRepository{
     // member 찾기
     @Override
     public Optional<Member> findById(Long id) {
+        // Id를 store 에서 get으로 꺼내면 됨
         // null이 반환될 가능성이 있다면 Optional로 감싸줌
         return Optional.ofNullable(store.get(id));
     }
 
     @Override
     public Optional<Member> findByName(String name) {
-        return Optional.empty();
+        // 람다 활용 - loop로 돌리면서 member의 name이 @param과 같은지
+        // 찾으면 바로 반환시키고
+        // 없으면 Optional에 포함시켜서 반환
+        return store.values().stream()
+                .filter(member -> member.getName().equals(name))
+                .findAny();
     }
 
     @Override
     public List<Member> findAll() {
-        return null;
+        // 반환을 List로 하면 편하게 사용할 수 있음
+        // store에 있는 value로 ArrayList로 생성
+        return new ArrayList<>(store.values());
+    }
+
+    public void clearStore() {
+        store.clear();
     }
 }
