@@ -1,6 +1,6 @@
 logging:
   pattern:
-    console: "[Practical Java] %clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+    console: "[saramin Test] %clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
 
 spring:
   main:
@@ -10,10 +10,12 @@ spring:
     suffix : .html
     cache : false
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/test
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/?serverTimezone=UTC&characterEncoding=UTF-8
+#    username: root
+#    password: 1234
 
 server:
   port: 8001
