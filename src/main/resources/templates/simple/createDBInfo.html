@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <form action="/simple/createDBInfo" method="post">
+        <div class="form-group">
+            <label for="host">DB host</label>
+            <input type="text" id="host" name="host" placeholder="host를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="dbId">ID</label>
+            <input type="text" id="dbId" name="dbId" placeholder="ID를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="dbPw">Password</label>
+            <input type="text" id="dbPw" name="dbPw" placeholder="PW를 입력하세요">
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

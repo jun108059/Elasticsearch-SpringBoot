@@ -25,12 +25,12 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/members/new")
+    @GetMapping("/search/new")
     public String createForm() {
-        return "members/createMemberForm";
+        return "search/createServiceForm";
     }
 
-    @PostMapping("/members/new")
+    @PostMapping("/search/new")
     public String create(MemberForm form) {
         Member member = new Member();
         member.setName(form.getName());
@@ -46,4 +46,6 @@ public class MemberController {
         model.addAttribute("members", members);
         return "members/memberList";
     }
+
+
 }

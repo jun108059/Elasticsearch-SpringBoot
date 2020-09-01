@@ -5,6 +5,7 @@ import com.searchengine.yjpark.repository.JdbcTemplateMemberRepository;
 import com.searchengine.yjpark.repository.MemberRepository;
 import com.searchengine.yjpark.repository.MemoryMemberRepository;
 import com.searchengine.yjpark.service.MemberService;
+import com.searchengine.yjpark.service.ServiceService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,4 +31,6 @@ public class SpringConfig {
 //        return new JdbcMemberRepository(dataSource);
         return new JdbcTemplateMemberRepository(dataSource);
     }
+
+    public ServiceService serviceService() { return new ServiceService()}
 }
