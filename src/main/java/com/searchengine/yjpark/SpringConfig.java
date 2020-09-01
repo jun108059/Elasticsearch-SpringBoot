@@ -1,6 +1,7 @@
 package com.searchengine.yjpark;
 
 import com.searchengine.yjpark.repository.JdbcMemberRepository;
+import com.searchengine.yjpark.repository.JdbcTemplateMemberRepository;
 import com.searchengine.yjpark.repository.MemberRepository;
 import com.searchengine.yjpark.repository.MemoryMemberRepository;
 import com.searchengine.yjpark.service.MemberService;
@@ -24,8 +25,9 @@ public class SpringConfig {
     }
     @Bean
     public MemberRepository memberRepository() {
-        // 구현체 생성
-        // return new MemoryMemberRepository();
-        return new JdbcMemberRepository(dataSource);
+         // 구현체 생성
+//        return new MemoryMemberRepository();
+//        return new JdbcMemberRepository(dataSource);
+        return new JdbcTemplateMemberRepository(dataSource);
     }
 }
