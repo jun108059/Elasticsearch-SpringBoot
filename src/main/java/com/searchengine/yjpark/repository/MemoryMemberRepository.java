@@ -1,6 +1,7 @@
 package com.searchengine.yjpark.repository;
 
 import com.searchengine.yjpark.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
