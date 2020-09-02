@@ -2,10 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="container">
+    <div>
+        <h1>데이터베이스 정보 저장</h1>
+    </div>
     <form action="/simple/createDBInfo" method="post">
         <div class="form-group">
-            <label for="host">DB host</label>
-            <input type="text" id="host" name="host" placeholder="host를 입력하세요">
+            <label for="dbConnIp">DB host</label>
+            <input type="text" id="dbConnIp" name="dbConnIp" placeholder="host를 입력하세요">
         </div>
         <div class="form-group">
             <label for="dbId">ID</label>
@@ -13,9 +16,19 @@
         </div>
         <div class="form-group">
             <label for="dbPw">Password</label>
-            <input type="text" id="dbPw" name="dbPw" placeholder="PW를 입력하세요">
+            <input type="password" id="dbPw" name="dbPw" placeholder="PW를 입력하세요">
         </div>
+        <input type='submit'>
     </form>
+    <div>
+        <p>
+            <a href="/">홈으로 이동</a>
+            <br>
+            <a href="/simple/serviceInfo"> 서비스 등록 page</a>
+            <br>
+            <a href="/"> 색인 조회 page</a>
+        </p>
+    </div>
 </div> <!-- /container -->
 </body>
 </html>
