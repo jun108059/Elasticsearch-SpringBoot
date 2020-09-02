@@ -1,7 +1,5 @@
 package com.searchengine.yjpark.service;
 
-import com.searchengine.yjpark.domain.Member;
-import com.searchengine.yjpark.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

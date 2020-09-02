@@ -1,7 +1,5 @@
 package com.searchengine.yjpark.service;
 
-import com.searchengine.yjpark.domain.Member;
-import com.searchengine.yjpark.repository.MemoryMemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
