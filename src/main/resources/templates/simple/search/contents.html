@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <div>
+        <h1>검색 컨텐츠 조회</h1>
+        <p> <strong>검색 컨텐츠 조회 API</strong></p>
+    </div>
+
+    <form action="/simple/search/contents">
+        <label for="search">index 명 </label>
+        <input type="search" id="search" name="search">
+        <input type="submit" value="검색">
+    </form>
+
+
+
+    <div>
+        <p>왼쪽 사이드로 빼기</p>
+        <p>
+            <a href="/simple/createDBInfo">DB 정보 생성</a>
+            <br>
+            <a href="/simple/serviceInfo"> 서비스 등록</a>
+            <br>
+            <a href="/simple/search/contents"> 색인 조회</a>
+        </p>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

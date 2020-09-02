@@ -22,39 +22,3 @@ public class DefaultRestApi {
 	}
 
 }
-
-@Controller
-class WelcomeController {
-	
-	@RequestMapping("/index")
-	public String locale() {
-		return "index";
-	}
-}
-
-@Controller
-class signupController {
-	
-	@RequestMapping("/signup")
-	public String locale() {
-		return "signup";
-	}
-}
-
-@Controller
-class signResultController {
-	
-	@RequestMapping("/signup-result")
-	public String locale() {
-		return "signup-result";
-	}
-}
-
-@Controller
-class registrationController {
-	
-	@RequestMapping("/registration")
-	public String locale() {
-		return "registration";
-	}
-}
