@@ -10,12 +10,10 @@ spring:
     suffix : .html
     cache : false
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/test
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/?serverTimezone=UTC&characterEncoding=UTF-8
-#    username: root
-#    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/search_engine?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 1234
 
 server:
   port: 8001

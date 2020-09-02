@@ -18,6 +18,15 @@ public class SpringConfig {
     }
 
     @Bean
+    public ServiceService serviceService() { return new ServiceService(serviceRepository());}
+
+    @Bean
+    public ServiceRepository serviceRepository() {
+        // 구현체 생성
+        return new JdbcTemplateServiceRepository(dataSource);
+    }
+
+    @Bean
     public MemberService memberService() {
         return new MemberService(memberRepository());
     }
@@ -28,12 +37,5 @@ public class SpringConfig {
 //        return new JdbcMemberRepository(dataSource);
         return new JdbcTemplateMemberRepository(dataSource);
     }
-    @Bean
-    public ServiceService serviceService() { return new ServiceService(serviceRepo)}
 
-    @Bean
-    public ServiceRepository serviceRepository() {
-        // 구현체 생성
-        return new JdbcTemplateServiceRepository(dataSource);
-    }
 }

@@ -1,8 +1,7 @@
 package com.searchengine.yjpark.service;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
-import com.searchengine.yjpark.domain.Member;
-import com.searchengine.yjpark.repository.MemberRepository;
+import com.searchengine.yjpark.domain.Service;
 import com.searchengine.yjpark.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,7 +10,6 @@ import java.util.Optional;
 
 public class ServiceService {
 
-//    private final MemberRepository memberRepository = new MemoryMemberRepository();
     private final ServiceRepository serviceRepository;
 
     @Autowired
@@ -26,20 +24,36 @@ public class ServiceService {
      */
     public String registrationDB(DataBaseInfo dataBaseInfo) {
 
-        memberRepository.save(member);
-        return member.getId();
+        serviceRepository.save(dataBaseInfo);
+        return dataBaseInfo.getDbConnIp();
     }
 
 
     /**
-     * 전체 회원 조회
+     * 전체 데이터베이스 정보 조회
      * @return
      */
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
+    public List<DataBaseInfo> findAllDBInfo() {
+        return serviceRepository.findAll();
     }
 
-    public Optional<Member> findOne(Long memberId) {
-        return memberRepository.findById(memberId);
+    /**
+     * host 정보로 db Info 불러오기
+     * @param host
+     * @return
+     */
+    public Optional<DataBaseInfo> findOne(String host) {
+        return serviceRepository.findByHost(host);
+    }
+
+    /**
+     * 서비스 등록
+     * @param
+     * @return
+     */
+    public String registrationService(Service service) {
+
+        serviceRepository.saveService(service);
+        return service.getServiceId();
     }
 }
