@@ -3,7 +3,7 @@ package com.searchengine.yjpark.domain;
 public class DataBaseInfo {
 
     private Long id;
-    private String host;
+    private String dbConnIp;
     private String dbId;
     private String dbPw;
 
@@ -16,12 +16,12 @@ public class DataBaseInfo {
         this.id = id;
     }
 
-    public String getHost() {
-        return host;
+    public String getDbConnIp() {
+        return dbConnIp;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setDbConnIp(String dbConnIp) {
+        this.dbConnIp = dbConnIp;
     }
 
     public String getDbId() {
