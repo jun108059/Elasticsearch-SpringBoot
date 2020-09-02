@@ -1,7 +1,7 @@
 package com.searchengine.yjpark.repository;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
-import com.searchengine.yjpark.domain.Member;
+import com.searchengine.yjpark.domain.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,7 +29,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
         jdbcInsert.withTableName("database_list").usingGeneratedKeyColumns("idx");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("db_conn_ip", dataBaseInfo.getHost());
+        parameters.put("db_conn_ip", dataBaseInfo.getDbConnIp());
         parameters.put("db_id", dataBaseInfo.getDbId());
         parameters.put("db_pw", dataBaseInfo.getDbPw());
 
@@ -40,25 +40,43 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
-        List<Member> result = jdbcTemplate.query("select * from member where id = ?", memberRowMapper(), id);
+    public Optional<DataBaseInfo> findByHost(String host) {
+        List<DataBaseInfo> result = jdbcTemplate.query("SELECT * FROM database_list WHERE db_conn_ip = ?", databaseRowMapper(), host);
         return result.stream().findAny(); // Optional로 반환하기 위해
     }
 
     @Override
-    public List<Member> findAll() {
-        return jdbcTemplate.query("select * from member", memberRowMapper());
+    public List<DataBaseInfo> findAll() {
+        return jdbcTemplate.query("SELECT * FROM database_list", databaseRowMapper());
     }
 
-    private RowMapper<Member> memberRowMapper() {
-        return new RowMapper<Member>() {
+    private RowMapper<DataBaseInfo> databaseRowMapper() {
+        return new RowMapper<DataBaseInfo>() {
             @Override
-            public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Member member = new Member();
-                member.setId(rs.getLong("id"));
-                member.setName(rs.getString("name"));
-                return member;
+            public DataBaseInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+                DataBaseInfo dataBaseInfo = new DataBaseInfo();
+                dataBaseInfo.setDbConnIp(rs.getString("db_conn_ip"));
+                dataBaseInfo.setDbId(rs.getString("db_id"));
+                dataBaseInfo.setDbPw(rs.getString("db_pw"));
+                return dataBaseInfo;
             }
         };
+    }
+
+    @Override
+    public Service saveService(Service service) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("service").usingGeneratedKeyColumns("idx");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("service_id", service.getServiceId());
+        parameters.put("service_detail", service.getServiceDetail());
+        parameters.put("bulk_query", service.getBulkQuery());
+        parameters.put("db_conn_ip", service.getDbInfo());
+
+        Number key = jdbcInsert.executeAndReturnKey(new
+                MapSqlParameterSource(parameters));
+        service.setId(key.longValue());
+        return service;
     }
 }

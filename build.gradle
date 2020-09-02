@@ -23,7 +23,7 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'mysql:mysql-connector-java'
 }
 
 test {
