@@ -125,4 +125,42 @@ public class IndexAPIController {
 
         return acknowledged == true ? "인덱스가 생성되었습니다.":"인덱스생성에 실패하였습니다.";
     }
+
+    @RequestMapping("/delete")
+    public Object delete() {
+
+        boolean acknowledged = false;
+
+        try(
+                RestHighLevelClient client = createConnection()
+        ){
+
+            //index name
+            String indexName = "sample-korean-index";
+
+            //인덱스 삭제 요청 객체
+            DeleteIndexRequest request = new DeleteIndexRequest(indexName);
+
+            DeleteIndexResponse response = client.indices().delete(request, RequestOptions.DEFAULT);
+
+            acknowledged = response.isAcknowledged();
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return "인덱스 삭제에 실패하였습니다. - catch";
+        }
+
+        return acknowledged == true ? "인덱스 삭제가 완료되었습니다.":"인덱스 삭제에 실패하였습니다.";
+    }
+
+    /*
+     * connection create method
+     */
+    public RestHighLevelClient createConnection() {
+        return new RestHighLevelClient(
+                RestClient.builder(
+                        new HttpHost("127.0.0.1",9200,"http")
+                )
+        );
+    }
 }
