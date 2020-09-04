@@ -24,6 +24,9 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	runtimeOnly 'mysql:mysql-connector-java'
+
+	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.9.0'
+	implementation 'org.elasticsearch:elasticsearch:7.9.0'
 }
 
 test {
