@@ -12,4 +12,5 @@ public interface ServiceRepository {
     List<DataBaseInfo> findAll();
 
     Service saveService(Service service);
+    List<Service> findAllService();
 }

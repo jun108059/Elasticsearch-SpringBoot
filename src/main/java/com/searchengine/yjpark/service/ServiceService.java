@@ -19,13 +19,13 @@ public class ServiceService {
 
     /**
      * 데이터베이스 정보 등록
-     * @param
-     * @return
+     * @param dataBaseInfo
+     *
      */
-    public String registrationDB(DataBaseInfo dataBaseInfo) {
+    public void registrationDB(DataBaseInfo dataBaseInfo) {
 
         serviceRepository.save(dataBaseInfo);
-        return dataBaseInfo.getDbConnIp();
+//        return dataBaseInfo.getDbConnIp();
     }
 
 
@@ -51,9 +51,17 @@ public class ServiceService {
      * @param
      * @return
      */
-    public String registrationService(Service service) {
+    public void registrationService(Service service) {
 
         serviceRepository.saveService(service);
-        return service.getServiceId();
+//        return service.getServiceId();
+    }
+
+    /**
+     * 전체 서비스 정보 조회
+     * @return
+     */
+    public List<Service> findAllService() {
+        return serviceRepository.findAllService();
     }
 }

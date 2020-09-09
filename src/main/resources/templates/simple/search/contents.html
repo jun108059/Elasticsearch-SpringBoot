@@ -1,30 +1,90 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>컨텐츠 조회</title>
+    <script src="/js/includeHTML.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+
 <body>
+<nav include-html="/html/nav.html"></nav>
 <div class="container">
+    <br>
     <div>
         <h1>검색 컨텐츠 조회</h1>
         <p> <strong>검색 컨텐츠 조회 API</strong></p>
     </div>
 
-    <form action="/simple/search/contents">
+    <form action="/simple/search/contents" method="get">
         <label for="search">index 명 </label>
         <input type="search" id="search" name="search">
         <input type="submit" value="검색">
     </form>
 
+    <div class="tableSubHeadingColor" th:object="${services}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>index</th>
+                <th>status</th>
+                <th>docs.count</th>
+                <th>설명</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="service : ${services}">
+                <td th:text="${service.getServiceId()}"></td>
+                <td th:text="open"></td>
+                <td th:text="1200"></td>
+                <td th:text="${service.getServiceDetail()}"></td>
+            </tr>
+            </tbody>
+        </table>
 
 
-    <div>
-        <p>왼쪽 사이드로 빼기</p>
-        <p>
-            <a href="/simple/createDBInfo">DB 정보 생성</a>
-            <br>
-            <a href="/simple/serviceInfo"> 서비스 등록</a>
-            <br>
-            <a href="/simple/search/contents"> 색인 조회</a>
-        </p>
+<!--
+        &lt;!&ndash; customers pagination &ndash;&gt;
+        <nav aria-label="Pagination" th:if="${customers.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${customers.number eq 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/customers?page={id}(id=${customers.number lt 2 ? 1 : customers.number})}"
+                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i eq customers.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, customers.totalPages, 1)}">
+                    <a class="page-link" th:href="@{/customers?page={id}(id=${i})}" th:text="${i}"
+                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                </li>
+                <li class="page-item" th:classappend="${customers.number + 1 eq customers.totalPages} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/customers?page={id}(id=${customers.number + 2})}"
+                       aria-label="Next" title="Next Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>-->
+
     </div>
+
+
+
 </div> <!-- /container -->
 </body>
+<script>
+    includeHTML();
+</script>
 </html>

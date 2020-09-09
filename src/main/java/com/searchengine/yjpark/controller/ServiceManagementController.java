@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 public class ServiceManagementController {
+
 
     private final ServiceService serviceService;
 
@@ -27,13 +29,13 @@ public class ServiceManagementController {
     // post로 전달받은 data 넣기
     @PostMapping("/simple/createDBInfo")
     public String create(@ModelAttribute DataBaseInfo form) {
-        System.out.println(form.getDbConnIp());
-        DataBaseInfo dbinfo = new DataBaseInfo();
-        dbinfo.setDbConnIp(form.getDbConnIp());
-        dbinfo.setDbId(form.getDbId());
-        dbinfo.setDbPw(form.getDbPw());
+//        System.out.println(form.getDbConnIp());
+        DataBaseInfo dbInfo = new DataBaseInfo();
+        dbInfo.setDbConnIp(form.getDbConnIp());
+        dbInfo.setDbId(form.getDbId());
+        dbInfo.setDbPw(form.getDbPw());
 
-        serviceService.registrationDB(dbinfo);
+        serviceService.registrationDB(dbInfo);
 
         return "redirect:/";
     }
@@ -69,6 +71,27 @@ public class ServiceManagementController {
         List<DataBaseInfo> dbInfo= serviceService.findAllDBInfo();
         model.addAttribute("dbInfo", dbInfo);
         return "simple/serviceInfo";
+    }
+
+
+    // 색인 조회 page
+    @GetMapping("/simple/search/contents")
+    public String contentsPage(Model model) {
+/*        int page = 0;
+        int size = 10;
+
+        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+            page = Integer.parseInt(request.getParameter("page")) - 1;
+        }
+
+        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+            size = Integer.parseInt(request.getParameter("size"));
+        }*/
+
+        // 저장된 Service 정보 가져오기
+        List<Service> services = serviceService.findAllService();
+        model.addAttribute("services", services);
+        return "simple/search/contents";
     }
 
 }

@@ -79,4 +79,23 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
         service.setId(key.longValue());
         return service;
     }
+
+    @Override
+    public List<Service> findAllService() {
+        return jdbcTemplate.query("SELECT * FROM service", serviceRowMapper());
+    }
+
+    private RowMapper<Service> serviceRowMapper() {
+        return new RowMapper<Service>() {
+            @Override
+            public Service mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Service service = new Service();
+                service.setServiceId(rs.getString("service_id"));
+                service.setServiceDetail(rs.getString("service_detail"));
+                service.setBulkQuery(rs.getString("bulk_query"));
+                service.setDbInfo(rs.getString("db_conn_ip"));
+                return service;
+            }
+        };
+    }
 }

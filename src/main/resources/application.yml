@@ -16,7 +16,8 @@ spring:
     password: 1234
 
 elasticsearch:
-  hosts: http://localhost:9200
+  host: localhost
+  port: 9200
 
 server:
   port: 8001
