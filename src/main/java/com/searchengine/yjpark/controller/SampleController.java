@@ -28,98 +28,12 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/simple/bulk")
-public class ServiceAPIController {
+@RequestMapping("/sample")
+public class SampleController {
 
     @Autowired
     RestHighLevelClient restHighLevelClient;
-    /*
-    @RequestMapping("/create")
-    public Object createIndex() {
 
-        boolean acknowledged = false;
-
-        try(
-                RestHighLevelClient client = createConnection()
-        ){
-            //index name
-            String indexName = "search_engine";
-            //type name
-            String typeName = "service";
-
-            //settings
-     *//*       XContentBuilder settingsBuilder = XContentFactory.jsonBuilder();
-            settingsBuilder.startObject();
-            {
-                settingsBuilder.field("number_of_shards",5);
-                settingsBuilder.field("number_of_replicas",1);
-            }
-            settingsBuilder.endObject();*//*
-
-            //mapping info
-            XContentBuilder indexBuilder = XContentFactory.jsonBuilder();
-            indexBuilder.startObject();
-            {
-                indexBuilder.startObject(typeName)
-                    .startObject("properties")
-                        .startObject("idx")
-                            .field("type", "integer")
-                        .endObject()
-                        .startObject("service_id")
-                            .field("type","text")
-                        .endObject()
-                        .startObject("service_detail")
-                           .field("type","text")
-                        .endObject()
-                        .startObject("bulk_query")
-                            .field("type","text")
-                        .endObject()
-                        .startObject("db_conn_ip")
-                            .field("type","text")
-                        .endObject()
-                    .endObject()
-                .endObject();
-            }
-            indexBuilder.endObject();
-
-
-            *//*
-            //인덱스생성 요청 객체
-            CreateIndexRequest request = new CreateIndexRequest(indexName);
-            //세팅 정보
-            request.settings(settingsBuilder);
-            //매핑 정보
-            request.mapping(indexBuilder); //어떤 type인지 명시를 안했는데...
-            *//*
-
-            *//*
-            //인덱스생성
-            CreateIndexResponse response = client.indices().create(indexRequest, RequestOptions.DEFAULT);
-
-            acknowledged = response.isAcknowledged();
-            *//*
-
-            XContentBuilder builder = XContentFactory.jsonBuilder();
-            builder.startObject();
-            {
-                builder.field("user", "youngjun");
-                builder.timeField("postDate", new Date());
-                builder.field("message", "trying out Elasticsearch");
-            }
-            builder.endObject();
-            IndexRequest indexRequest = new IndexRequest("posts")
-                    .id("1").source(builder);
-
-            acknowledged = true;
-
-        }catch (Exception e) {
-            e.printStackTrace();
-            return "인덱스 생성에 실패하였습니다. - catch";
-        }
-
-        return acknowledged == true ? "인덱스가 생성되었습니다.":"인덱스생성에 실패하였습니다.";
-    }
-*/
     @RequestMapping("/create")
     public void create() {
         try {
@@ -239,4 +153,110 @@ public class ServiceAPIController {
 
         return acknowledged == true ? "인덱스 삭제가 완료되었습니다.":"인덱스 삭제에 실패하였습니다.";
     }*/
+
+
+    @RequestMapping("/create")
+    public Object createIndex() {
+
+        boolean acknowledged = false;
+
+        try(
+                RestHighLevelClient client = createConnection()
+        ){
+            //index name
+            String indexName = "saramin";
+            //type name
+            String typeName = "curation";
+
+            //settings
+            XContentBuilder settingsBuilder = XContentFactory.jsonBuilder();
+            settingsBuilder.startObject();
+            {
+                settingsBuilder.field("number_of_shards",5);
+                settingsBuilder.field("number_of_replicas",1);
+            }
+            settingsBuilder.endObject();
+
+            //mapping info
+            XContentBuilder indexBuilder = XContentFactory.jsonBuilder();
+            indexBuilder.startObject();
+            {
+                indexBuilder.startObject(typeName)
+                        .startObject("properties")
+                        .startObject("curation_seq")
+                        .field("type", "integer")
+                        .endObject()
+                        .startObject("curation_title")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("template")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("template_img")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("ending_txt")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("tag")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("pc_hits")
+                        .field("type","integer")
+                        .endObject()
+                        .startObject("m_hits")
+                        .field("type","integer")
+                        .endObject()
+                        .startObject("reservation_dt")
+                        .field("type","date")
+                        .endObject()
+                        .startObject("reg_dt")
+                        .field("type","date")
+                        .endObject()
+                        .startObject("up_dt")
+                        .field("type","date")
+                        .endObject()
+                        .startObject("status")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("open_fl")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("main_fl")
+                        .field("type","text")
+                        .endObject()
+                        .startObject("writer")
+                        .field("type","text")
+                        .endObject()
+                        .endObject()
+                        .endObject();
+            }
+            indexBuilder.endObject();
+
+            //인덱스생성 요청 객체
+            CreateIndexRequest request = new CreateIndexRequest(indexName);
+            //세팅 정보
+            request.settings(settingsBuilder);
+            //매핑 정보
+            request.mapping(indexBuilder); //어떤 type인지 명시를 안했는데...
+
+
+            //별칭설정
+            String aliasName = "curationType";
+            request.alias(new Alias(aliasName));
+
+            //인덱스생성
+            CreateIndexResponse response = client.indices().create(request, RequestOptions.DEFAULT);
+
+            acknowledged = response.isAcknowledged();
+
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return "인덱스 생성에 실패하였습니다. - catch";
+        }
+
+        return acknowledged == true ? "인덱스가 생성되었습니다.":"인덱스생성에 실패하였습니다.";
+    }
 }

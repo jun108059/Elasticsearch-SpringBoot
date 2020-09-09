@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -62,36 +61,6 @@ public class ServiceManagementController {
 
         // return "redirect:/simple/search/bulk";
         return "redirect:/";
-    }
-
-    // Bulk API
-    @GetMapping("/simple/search/bulk")
-    public String bulkAPI(Model model) {
-        // 저장된 DB 정보 가져오기
-        List<DataBaseInfo> dbInfo= serviceService.findAllDBInfo();
-        model.addAttribute("dbInfo", dbInfo);
-        return "simple/serviceInfo";
-    }
-
-
-    // 색인 조회 page
-    @GetMapping("/simple/search/contents")
-    public String contentsPage(Model model) {
-/*        int page = 0;
-        int size = 10;
-
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
-        }
-
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
-        }*/
-
-        // 저장된 Service 정보 가져오기
-        List<Service> services = serviceService.findAllService();
-        model.addAttribute("services", services);
-        return "simple/search/contents";
     }
 
 }
