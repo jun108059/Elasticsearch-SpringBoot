@@ -26,11 +26,11 @@
     <form class="form-horizontal" action="/simple/serviceInfo" method="post">
         <div class="form-group" th:object="${dbInfo}">
             <label class="control-label col-sm-2" for="dbInfo">DB 지정</label>
-            <select class="form-control" id="dbInfo" name="dbInfo">
+            <select class="form-control" id="dbInfo" name="dbIdx">
                 <option value="">데이터베이스 지정</option>
                 <option th:each="database : ${dbInfo}"
-                        th:value="${database.dbConnIp}"
-                        th:text="${database.dbConnIp}+' : '+${database.dbId}"></option>
+                        th:value="${database.idx}"
+                        th:text="${database.idx}+' : '+${database.dbConnIp}+' : '+${database.dbId}"></option>
             </select>
         </div>
         <br>
@@ -52,6 +52,13 @@
             <label class="control-label col-sm-2" for="bulkQuery">Bulk Query</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="bulkQuery" name="bulkQuery" placeholder="Bulk Query를 입력하세요">
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="serviceDetail">id 필드</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="idColume" name="idColume" placeholder="colume">
             </div>
         </div>
         <br>

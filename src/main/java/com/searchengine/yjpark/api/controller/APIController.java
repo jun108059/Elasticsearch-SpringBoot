@@ -1,4 +1,4 @@
-package com.searchengine.yjpark.controller;
+package com.searchengine.yjpark.controller.api;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -36,8 +37,16 @@ public class APIController {
     RestHighLevelClient restHighLevelClient;
 
     @RequestMapping("/bulk")
-    public void bulkIndex() {
+    @GetMapping("args")
+    public void bulkIndex(@RequestParam(value = "id")String id) {
+        // href + args? id = ServiceId
         try {
+            // Index Request
+            IndexRequest request = new IndexRequest(id);
+            String indexId = "myIndex_" + id; // prefix 설정
+            request.id(indexId); // index id 할당
+
+
             SearchRequest searchRequest = new SearchRequest();
             searchRequest.indices("");
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -137,20 +146,12 @@ public class APIController {
         return acknowledged == true ? "인덱스 삭제가 완료되었습니다.":"인덱스 삭제에 실패하였습니다.";
     }
 
-    // Bulk API
-    @GetMapping("/simple/search/bulk")
-    public String bulkAPI(Model model) {
-        // 저장된 DB 정보 가져오기
-        List<DataBaseInfo> dbInfo= serviceService.findAllDBInfo();
-        model.addAttribute("dbInfo", dbInfo);
-        return "simple/serviceInfo";
-    }
 
 
     // 색인 조회 page
     @GetMapping("/simple/search/contents")
     public String contentsPage(Model model) {
-/*        int page = 0;
+        int page = 0;
         int size = 10;
 
         if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
@@ -159,11 +160,14 @@ public class APIController {
 
         if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
             size = Integer.parseInt(request.getParameter("size"));
-        }*/
+        }
+
 
         // 저장된 Service 정보 가져오기
         List<Service> services = serviceService.findAllService();
         model.addAttribute("services", services);
         return "simple/search/contents";
     }
+
+
 }

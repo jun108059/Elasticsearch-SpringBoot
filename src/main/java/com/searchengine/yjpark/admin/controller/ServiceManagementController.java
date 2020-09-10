@@ -1,8 +1,10 @@
-package com.searchengine.yjpark.controller;
+package com.searchengine.yjpark.controller.admin;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
 import com.searchengine.yjpark.service.ServiceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Controller
 public class ServiceManagementController {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     private final ServiceService serviceService;
@@ -51,16 +54,38 @@ public class ServiceManagementController {
     // post로 전달받은 data 넣기
     @PostMapping("/simple/serviceInfo")
     public String create(@ModelAttribute Service form) {
+        log.info("Request : {}", form.getIdColume());
         Service service = new Service();
         service.setServiceId(form.getServiceId());
         service.setServiceDetail(form.getServiceDetail());
         service.setBulkQuery(form.getBulkQuery());
         service.setDbInfo(form.getDbInfo());
+        service.setIdColume(form.getIdColume());
 
         serviceService.registrationService(service);
 
         // return "redirect:/simple/search/bulk";
-        return "redirect:/";
+        return "redirect:/simple/serviceList";
     }
 
+    // 서비스 List Page 랜더링
+    @GetMapping("/simple/serviceList")
+    public String serviceList(Model model) {
+        // 저장된 Service 정보 가져오기
+        List<Service> services= serviceService.findAllService();
+        model.addAttribute("services", services);
+        log.info("service Count: {}", services.size());
+        return "simple/serviceList";
+    }
+
+    // 검색된 서비스만 띄우기
+    @PostMapping("/simple/serviceSearch")
+    public String getServiceId(@ModelAttribute Service form, Model model) {
+        // form id 받기
+        String serviceId = form.getServiceId();
+        // id 일치하는 service List
+        List<Service> services = serviceService.findServiceByID(serviceId);
+        model.addAttribute("services", services);
+        return "simple/serviceList";
+    }
 }

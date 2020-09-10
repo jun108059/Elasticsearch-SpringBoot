@@ -1,3 +1,4 @@
+/*
 package com.searchengine.yjpark.controller;
 
 import com.searchengine.yjpark.config.elasticsearch.ESConfig;
@@ -129,7 +130,8 @@ public class SampleController {
         }
     }
 
-  /*  @RequestMapping("/delete")
+  */
+/*  @RequestMapping("/delete")
     public Object delete() {
 
         boolean acknowledged = false;
@@ -152,7 +154,8 @@ public class SampleController {
         }
 
         return acknowledged == true ? "인덱스 삭제가 완료되었습니다.":"인덱스 삭제에 실패하였습니다.";
-    }*/
+    }*//*
+
 
 
     @RequestMapping("/create")
@@ -259,4 +262,4 @@ public class SampleController {
 
         return acknowledged == true ? "인덱스가 생성되었습니다.":"인덱스생성에 실패하였습니다.";
     }
-}
+}*/
