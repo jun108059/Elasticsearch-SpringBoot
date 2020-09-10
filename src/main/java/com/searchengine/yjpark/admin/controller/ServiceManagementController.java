@@ -1,4 +1,4 @@
-package com.searchengine.yjpark.controller.admin;
+package com.searchengine.yjpark.admin.controller;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
@@ -47,6 +47,7 @@ public class ServiceManagementController {
     public String createService(Model model) {
         // 저장된 DB 정보 가져오기
         List<DataBaseInfo> dbInfo= serviceService.findAllDBInfo();
+        log.info("dbInfo : {}", dbInfo.get(1).getIdx());
         model.addAttribute("dbInfo", dbInfo);
         return "simple/serviceInfo";
     }
@@ -54,12 +55,12 @@ public class ServiceManagementController {
     // post로 전달받은 data 넣기
     @PostMapping("/simple/serviceInfo")
     public String create(@ModelAttribute Service form) {
-        log.info("Request : {}", form.getIdColume());
+        log.info("Request Idx: {}", form.getDbIdx());
         Service service = new Service();
         service.setServiceId(form.getServiceId());
         service.setServiceDetail(form.getServiceDetail());
         service.setBulkQuery(form.getBulkQuery());
-        service.setDbInfo(form.getDbInfo());
+        service.setDbIdx(form.getDbIdx());
         service.setIdColume(form.getIdColume());
 
         serviceService.registrationService(service);
