@@ -2,18 +2,18 @@ package com.searchengine.yjpark.domain;
 
 public class DataBaseInfo {
 
-    private Long id;
+    private Long idx;
     private String dbConnIp;
     private String dbId;
     private String dbPw;
 
 
-    public Long getId() {
-        return id;
+    public Long getIdx() {
+        return idx;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdx(Long idx) {
+        this.idx = idx;
     }
 
     public String getDbConnIp() {

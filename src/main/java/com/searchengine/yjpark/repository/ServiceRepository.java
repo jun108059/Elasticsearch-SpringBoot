@@ -13,4 +13,5 @@ public interface ServiceRepository {
 
     Service saveService(Service service);
     List<Service> findAllService();
+    List<Service> findServiceById(String serviceId);
 }

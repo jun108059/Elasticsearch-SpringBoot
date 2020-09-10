@@ -64,4 +64,12 @@ public class ServiceService {
     public List<Service> findAllService() {
         return serviceRepository.findAllService();
     }
+
+    /**
+     * ID에 맞는 서비스 정보 조회
+     * @return
+     */
+    public List<Service> findServiceByID(String id) {
+        return serviceRepository.findServiceById(id);
+    }
 }

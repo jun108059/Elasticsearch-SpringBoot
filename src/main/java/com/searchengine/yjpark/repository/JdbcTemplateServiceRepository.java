@@ -26,7 +26,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     @Override
     public DataBaseInfo save(DataBaseInfo dataBaseInfo) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("database_list").usingGeneratedKeyColumns("idx");
+//        jdbcInsert.withTableName("database_list").usingGeneratedKeyColumns("idx");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("db_conn_ip", dataBaseInfo.getDbConnIp());
@@ -35,7 +35,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
 
         Number key = jdbcInsert.executeAndReturnKey(new
                 MapSqlParameterSource(parameters));
-        dataBaseInfo.setId(key.longValue());
+        dataBaseInfo.setIdx(key.longValue());
         return dataBaseInfo;
     }
 
@@ -55,6 +55,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
             @Override
             public DataBaseInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
                 DataBaseInfo dataBaseInfo = new DataBaseInfo();
+                dataBaseInfo.setIdx(rs.getLong("idx"));
                 dataBaseInfo.setDbConnIp(rs.getString("db_conn_ip"));
                 dataBaseInfo.setDbId(rs.getString("db_id"));
                 dataBaseInfo.setDbPw(rs.getString("db_pw"));
@@ -71,8 +72,9 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("service_id", service.getServiceId());
         parameters.put("service_detail", service.getServiceDetail());
+        parameters.put("db_idx", service.getDbIdx());
         parameters.put("bulk_query", service.getBulkQuery());
-        parameters.put("db_conn_ip", service.getDbInfo());
+        parameters.put("id_colume", service.getIdColume());
 
         Number key = jdbcInsert.executeAndReturnKey(new
                 MapSqlParameterSource(parameters));
@@ -93,9 +95,16 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
                 service.setServiceId(rs.getString("service_id"));
                 service.setServiceDetail(rs.getString("service_detail"));
                 service.setBulkQuery(rs.getString("bulk_query"));
-                service.setDbInfo(rs.getString("db_conn_ip"));
+                service.setDbIdx(rs.getLong("db_idx"));
                 return service;
             }
         };
     }
+
+    @Override
+    public List<Service> findServiceById(String id) {
+
+        return jdbcTemplate.query("SELECT * FROM service WHERE serviceId = ?", serviceRowMapper(), id);
+    }
+
 }
