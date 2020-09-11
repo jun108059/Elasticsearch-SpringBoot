@@ -1,7 +1,6 @@
 package com.searchengine.yjpark.es.client;
 
 import org.apache.http.HttpHost;
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -11,39 +10,34 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.Index;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-@Component
 public class ElasticsearchClient {
+    // Todo 인덱스 delete 만들어오기!
+    // Todo MVC 참고자료 보기
+    // Todo Spring Bean 관리 찾아보기
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     // 클라이언트 기능 분리
-    @Value("${elasticsearch.host}")
-    private String elasticHost;
-
-    @Value("${elasticsearch.port}")
-    private int elasticPort;
 
     // 생성자
     private final RestHighLevelClient elasticsearchClient;
 
-    public ElasticsearchClient(){
+
+    public ElasticsearchClient(String elasticHost, int elasticPort) {
         elasticsearchClient = new RestHighLevelClient(RestClient.builder(
                 new HttpHost(elasticHost, elasticPort, "http")));
     }
@@ -54,9 +48,19 @@ public class ElasticsearchClient {
     }
 
     // index 존재 여부 검사 함수
-    public boolean isIndexExist(){
+    public boolean isIndexExist(String indexName) {
 
-        return true;
+        GetIndexRequest request = new GetIndexRequest(indexName);
+
+        boolean exists = false;
+        try {
+            exists = elasticsearchClient.indices().exists(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("Request fail : {}", e.getMessage());
+            //Todo Error 핸들링
+        }
+
+        return exists;
     }
     
     // 데이터 Bulk 삽입
@@ -65,7 +69,7 @@ public class ElasticsearchClient {
         // Index 생성(서비스에서 생성 됨)
 
         elasticsearchClient.bulkAsync(request, RequestOptions.DEFAULT, new ActionListener<BulkResponse>() {
-            // 비동기 처리 이기 나중에 응답 받을 Listener
+            // 비동기 처리이기 나중에 응답 받을 Listener
             @Override
             public void onResponse(BulkResponse bulkItemResponses) {
                 log.info("Bulk Success");
@@ -129,29 +133,39 @@ public class ElasticsearchClient {
     }
 
     // 검색
-    public boolean search(String indexName, QueryBuilders queryBuilders, String keyWord, List<String> stringList) {
-        // QueryBuilders를 만들어서 받아오면 됨!
-
-        SearchRequest searchRequest = new SearchRequest();
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        HighlightBuilder highlightBuilder = new HighlightBuilder();
-        // Todo Test 돌려서 highlight 여러 개 되는지
-        for(String field : stringList){
-            searchSourceBuilder.query(QueryBuilders.matchQuery(field, keyWord));
-            HighlightBuilder.Field highlightText = new HighlightBuilder.Field(field);
-            highlightText.highlighterType("unified");
-            highlightBuilder.field(highlightText);
-        }
+    public SearchResponse search(String indexName, SearchSourceBuilder searchSourceBuilder) {
+        // Request 요청 만들기
+        SearchRequest searchRequest = new SearchRequest(indexName);
         searchRequest.source(searchSourceBuilder);
-        searchSourceBuilder.highlighter(highlightBuilder);
 
-        return true;
+        SearchResponse searchResponse = null;
+
+        try {
+            // 동기 Execution
+            searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("Search Response Fail : {}", e.getMessage());
+        }
+
+        return searchResponse;
+        // 서비스 로직에서 Map으로 Source, highlighting 꺼내오기
     }
 
     // 인덱스 리스트 가져오기
-    public boolean getIndexList() {
+    public boolean getIndexList(String prefixIndexName) {
+        // Todo Low Level로 리스트 가져오는거 만들어 오기
+        // High Level에 없음
+
+        //elasticsearchClient.getLowLevelClient().performRequest();
         // 검색 엔진에 색인된 모든 index List 가져오기
-        // return
+        GetIndexRequest request = new GetIndexRequest(prefixIndexName);
+        GetIndexResponse getIndexResponse = null;
+        try {
+            getIndexResponse = elasticsearchClient.indices().get(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        getIndexResponse.getIndices();
         return true;
     }
 
