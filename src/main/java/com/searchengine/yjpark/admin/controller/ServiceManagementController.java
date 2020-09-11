@@ -2,7 +2,7 @@ package com.searchengine.yjpark.admin.controller;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
-import com.searchengine.yjpark.service.ServiceService;
+import com.searchengine.yjpark.admin.service.ServiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

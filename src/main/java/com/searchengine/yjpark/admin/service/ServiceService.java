@@ -1,4 +1,4 @@
-package com.searchengine.yjpark.service;
+package com.searchengine.yjpark.admin.service;
 
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
