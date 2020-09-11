@@ -1,7 +1,7 @@
 package com.searchengine.yjpark;
 
 import com.searchengine.yjpark.repository.*;
-import com.searchengine.yjpark.service.ServiceService;
+import com.searchengine.yjpark.admin.service.ServiceService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
