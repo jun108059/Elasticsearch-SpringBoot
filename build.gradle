@@ -22,6 +22,8 @@ dependencies {
 	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.9.0'
 	implementation 'org.elasticsearch:elasticsearch:7.9.0'
 
+	implementation 'org.projectlombok:lombok'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
