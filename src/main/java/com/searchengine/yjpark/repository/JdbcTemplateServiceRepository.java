@@ -26,7 +26,6 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     @Override
     public DataBaseInfo save(DataBaseInfo dataBaseInfo) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-//        jdbcInsert.withTableName("database_list").usingGeneratedKeyColumns("idx");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("db_conn_ip", dataBaseInfo.getDbConnIp());
@@ -43,6 +42,12 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     public Optional<DataBaseInfo> findByHost(String host) {
         List<DataBaseInfo> result = jdbcTemplate.query("SELECT * FROM database_list WHERE db_conn_ip = ?", databaseRowMapper(), host);
         return result.stream().findAny(); // Optional로 반환하기 위해
+    }
+
+    @Override
+    public List<DataBaseInfo> findDbByIdx(Long dbIdx) {
+        List<DataBaseInfo> result = jdbcTemplate.query("SELECT * FROM database_list WHERE idx = ?", databaseRowMapper(), dbIdx);
+        return result;
     }
 
     @Override
@@ -74,7 +79,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
         parameters.put("service_detail", service.getServiceDetail());
         parameters.put("db_idx", service.getDbIdx());
         parameters.put("bulk_query", service.getBulkQuery());
-        parameters.put("id_colume", service.getIdColume());
+        parameters.put("id_column", service.getIdColumn());
 
         Number key = jdbcInsert.executeAndReturnKey(new
                 MapSqlParameterSource(parameters));
@@ -96,15 +101,33 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
                 service.setServiceDetail(rs.getString("service_detail"));
                 service.setBulkQuery(rs.getString("bulk_query"));
                 service.setDbIdx(rs.getLong("db_idx"));
+                service.setIdColumn(rs.getString("id_column"));
                 return service;
             }
         };
     }
 
     @Override
-    public List<Service> findServiceById(String id) {
+    public Service findServiceById(String id) {
+        String sql = "SELECT * FROM service WHERE service_id = ?";
 
-        return jdbcTemplate.query("SELECT * FROM service WHERE serviceId = ?", serviceRowMapper(), id);
+        return (Service) jdbcTemplate.queryForObject(sql, serviceRowMapper(), id);
     }
 
+    @Override
+    public String findBulkQuery(String id) {
+        String sql = "SELECT bulk_query FROM service WHERE service_id = ?";
+
+        String bulkQuery = (String) jdbcTemplate.queryForObject(sql, new Object[] { id }, String.class);
+        return bulkQuery;
+    }
+
+    @Override
+    public int findDbIdx(String id) {
+        String sql = "SELECT db_idx FROM service WHERE service_id = ?";
+
+        int dbIdx = (int) jdbcTemplate.queryForObject(sql, new Object[] { id }, Integer.class);
+
+        return dbIdx;
+    }
 }

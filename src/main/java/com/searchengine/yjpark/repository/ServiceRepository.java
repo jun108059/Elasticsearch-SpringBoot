@@ -10,8 +10,12 @@ public interface ServiceRepository {
     DataBaseInfo save(DataBaseInfo dataBaseInfo);
     Optional<DataBaseInfo> findByHost(String host);
     List<DataBaseInfo> findAll();
+    List<DataBaseInfo> findDbByIdx(Long dbIdx);
 
     Service saveService(Service service);
     List<Service> findAllService();
-    List<Service> findServiceById(String serviceId);
+    Service findServiceById(String serviceId);
+    String findBulkQuery(String serviceId);
+    int findDbIdx(String id);
+
 }
