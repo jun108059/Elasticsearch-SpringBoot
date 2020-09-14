@@ -1,5 +1,6 @@
 package com.searchengine.yjpark.api.service;
 
+import com.searchengine.yjpark.domain.Indexing;
 import com.searchengine.yjpark.domain.Search;
 import com.searchengine.yjpark.es.client.ElasticsearchClient;
 import org.elasticsearch.action.index.IndexRequest;
@@ -41,7 +42,6 @@ public class IndexService {
         request.id(indexId); // index id 할당
         // 서비스 Id, RDB data -> JSON
 
-        // DataBase 정보는 Form 으로 선택했었음
         // Postman Get 방식으로 테스트하려면 추가로 입력해야할 듯
         // 1. 클라이언트가 Database(Table) 선택 + 서비스ID 입력
         // 서비스 테이블 DB Idx 정보 가져오기
@@ -89,7 +89,7 @@ public class IndexService {
         // Source field(결과필드), 하이라이팅 꺼내오기
         // 1. 클라이언트가 {서비스ID} + {검색단어} + {...} 선택 -> 검색 or JSON POST
         // 2. JSON Type RequestBody -> Domain 과 Post 매핑 (getter 접근 가능)
-        /*****서비스 기능***/
+        /*****서비스 기능*****/
         // 3. SourceBuilder (Search Query 만들기, 결과 source filter, 하이라이팅 빌더)
         // 4. 서비스ID(IndexName)로 ES Client search 요청
         // 5. return 받은 Response API 정의대로 변환
@@ -98,12 +98,25 @@ public class IndexService {
     }
 
     // 부분 색인 생성 - Create
-    public void createDocument() {
-        // Todo Flow 작성해오기
+    public void createDocument(Indexing indexing) {
+        // 1. 서비스 ID로 ES 인덱스 접근
+        // 2. operation 에 따른 생성/업데이트/삭제 분기
+        // 3. 색인 생성(도큐먼트 한개)
+        // 3-1. 이미 해당 번호 도큐먼트 존재하는지 여부 확인
+        // 3-2. 생성하는 ES 클라이언트 호출
+        // 4. 색인 업데이트(도큐먼트 한개 업데이트)
+        // 4.1 해당 번호 도큐먼트가 있는지(없으면 튕기기 or 새로 생성)
+        // 4.2 업데이트하는 ES 클라이언트 호출
+        // 5. 색인 삭제(도큐먼트 한개 삭제)
+        // 5-1. 삭제할 도큐먼트가 있는지 (4-1 같은 맥락)
+        // 5-2. 삭제하는 ES 클라이언트 호출
+        // 색인 완료되면 @return true
+
+        indexing.getServiceId();
 
     }
 
-    // 부분 색인 업데이트 - Update
+/*    // 부분 색인 업데이트 - Update
     public void updateDocument() {
         // Todo Flow 작성해오기
 
@@ -113,6 +126,6 @@ public class IndexService {
     public void deleteDocument() {
         // Todo Flow 작성해오기
 
-    }
+    }*/
 
 }

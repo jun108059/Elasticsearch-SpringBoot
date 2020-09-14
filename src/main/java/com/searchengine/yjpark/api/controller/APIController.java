@@ -26,10 +26,10 @@ public class APIController {
 
     @GetMapping("/bulk")
     public void bulkIndex(@RequestParam(value = "service_id")String serviceId) {
-
         log.info("Bulk Get : {}", serviceId);
+        // 서비스 로직 호출
+        indexService.bulkIndex(serviceId);
 
-        IndexService indexService;
 
     }
 
@@ -42,7 +42,9 @@ public class APIController {
 
     @PostMapping("/indexing/id")
     public void indexingDocument(@RequestBody Indexing indexing) {
-
+        // 컨텐츠 부분 색인
+        // indexing > 서비스ID, 연산 타입, 컨텐츠 ID
+        // Todo 컨텐츠 id == 도큐먼트 ID?
         log.info("Search POST Test : {}", indexing.toString());
     }
 
