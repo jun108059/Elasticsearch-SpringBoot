@@ -93,34 +93,31 @@ public class IndexService {
      * @return
      */
     public void searchKeyword(Search search){
-        // POST 로 받은 {서비스 ID}, {검색 단어}, {하이라이팅 필드 지정}
+        // Request Body {서비스 ID}, {검색 단어}, {하이라이팅 필드 지정}
         String serviceId = search.getServiceId(); // = Todo indexName (preFix 붙이기)
         String searchText = search.getSearchText();
         // Todo highlight Map에서 column까지 어떻게 접근할 수 있는지(getter?)
 //        List<String> fieldList = new
-        // 결과필드지정 query 만들어주는 Builder
+        // 1. SourceBuilder (Search Query 만들기, 결과 source filter, 하이라이팅 빌더)
+        // 1-1. 결과필드지정 query 만들어주는 Builder
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        // 하이라이트 query 만들어주는 Builder
+        // 1-2. 하이라이트 query 만들어주는 Builder
         HighlightBuilder highlightBuilder = new HighlightBuilder();
-        // 하이라이트할 field 지정하기
-//        for(String field : fieldList){
-//            // Todo Test 돌려서 highlight 여러 개 되는지 확인하기
-//            searchSourceBuilder.query(QueryBuilders.matchQuery(field, searchText));
-//            HighlightBuilder.Field highlightText = new HighlightBuilder.Field(field);
-//            highlightText.highlighterType("unified");
-//            highlightBuilder.field(highlightText);
-//        }
-        // 하이라이트 생성
+        // 1-3. 하이라이트할 field 지정하기
+/*        for(String field : fieldList){
+            // Todo Test 돌려서 highlight 여러 개 되는지 확인하기
+            searchSourceBuilder.query(QueryBuilders.matchQuery(field, searchText));
+            HighlightBuilder.Field highlightText = new HighlightBuilder.Field(field);
+            highlightText.highlighterType("unified");
+            highlightBuilder.field(highlightText);
+        }*/
+        // 1-4. 하이라이트 생성
         searchSourceBuilder.highlighter(highlightBuilder);
 
         // Elastic Client 생성
-
-        // Source field(결과필드), 하이라이팅 꺼내오기
-        // 1. 클라이언트가 {서비스ID} + {검색단어} + {...} 선택 -> 검색 or JSON POST
-        // 2. JSON Type RequestBody -> Domain 과 Post 매핑 (getter 접근 가능)
-        /*****서비스 기능*****/
-        // 3. SourceBuilder (Search Query 만들기, 결과 source filter, 하이라이팅 빌더)
         // 4. 서비스ID(IndexName)로 ES Client search 요청
+
+
         // 5. return 받은 Response API 정의대로 변환
         // 6. 컨트롤러에 전달
 
@@ -156,5 +153,12 @@ public class IndexService {
         // Todo Flow 작성해오기
 
     }*/
+
+    public void testIsIndexExist(){
+        String indexName = "book";
+        boolean result = elasticsearchClient.isIndexExist(indexName);
+        log.info("client test : {}", result);
+
+    }
 
 }
