@@ -1,11 +1,14 @@
 package com.searchengine.yjpark.api.service;
 
+import com.searchengine.yjpark.admin.service.ServiceService;
+import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Indexing;
 import com.searchengine.yjpark.domain.Search;
 import com.searchengine.yjpark.es.client.ElasticsearchClient;
+import com.searchengine.yjpark.repository.BulkRepository;
+import com.searchengine.yjpark.repository.ServiceRepository;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.slf4j.Logger;
@@ -14,48 +17,74 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+
 
 @Service
 public class IndexService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    // 색인 기능 구현
-    // 검색 기능 구현
 
     @Autowired
     ElasticsearchClient elasticsearchClient;
-    // Todo Test 끝난뒤에는 junit 으로 옮기고 지우기
-    // index 존재하는지 확인하는 Test
-    // 클라이언트 연동되는지!
 
-    public void testIsIndexExist(){
-        String indexName = "book";
-        boolean result = elasticsearchClient.isIndexExist(indexName);
-        log.info("client test : {}", result);
+    @Autowired
+    ServiceRepository serviceRepository;
 
-    }
+    @Autowired
+    BulkRepository bulkRepository;
 
-    // 전체 색인 서비스
-    public void bulkIndex(String serviceId){
-        // Index Request
+    @Autowired
+    ServiceService serviceService;
+
+    // 전체 색인(Bulk) 서비스
+    // Todo 리턴 타입 꼭 줘야하는지 = Response가 N/A인데 필요한지
+    public void bulkIndex(String serviceId) {
+        // 1. serviceId와 일치하는 service BulkQuery 가져오기
+        com.searchengine.yjpark.domain.Service serviceInfo = serviceService.findServiceByID(serviceId);
+        // @Test 코드 Todo 삭제하기 - Model로 옮김
+        String bulkQuery = serviceInfo.getBulkQuery();
+        Long dbIdx = serviceInfo.getDbIdx(); // db 정보 가져오기 위해
+        String docColumnId = serviceInfo.getIdColumn(); //
+
+        List<DataBaseInfo> dbInfo = serviceService.findDbByIdx(dbIdx);
+
+        // 2. DB 정보로 동적 연결 - bulk Model 호출
+        int countRow = bulkRepository.countCuration(dbInfo, serviceInfo);
+
+        // 3. MySQL 데이터 Json 형식 변환
+        // https://stackoverflow.com/questions/58772409/convert-all-the-mysql-table-data-into-json-in-spring-boot
+        List<Map<String, Object>> jsonData = bulkRepository.dynamicMapping(dbInfo, serviceInfo);
+        // @Test Code
+        // jsonData.forEach(x -> log.info("test Code : {}", x));
+
         String indexId = "my_" + serviceId; // prefix 설정
-        IndexRequest request = new IndexRequest(indexId);
-        request.id(indexId); // index id 할당
-        // 서비스 Id, RDB data -> JSON
 
-        // Postman Get 방식으로 테스트하려면 추가로 입력해야할 듯
-        // 1. 클라이언트가 Database(Table) 선택 + 서비스ID 입력
-        // 서비스 테이블 DB Idx 정보 가져오기
-        // 서비스 테이블 - query 로 가져올 Table 확인
-        /********* 서비스 로직 시작 ***********/
-        // 1. 선택된 정보의 RDB 데이터 가져오기 (스키마 : Table)
-        // 2. RDB data를 JSON 형식으로 변환 (MySQL to JSON)
-        // 3. prefix + serviceID = indexName 선언
-        // 4. JSON 데이터를 ES Client Bulk 함수 호출
-            // 4.1 index 있는지 확인
-            // 있으면 삭제 (ES 클라이언트)
-            // 4.2
-        // 5. 컨틀올러에 결과 @return
+        // 4. Index 존재하는지 검사
+        boolean result = elasticsearchClient.isIndexExist(indexId);
+        log.info("기존 Index 가 있는지 : {}", result);
+        // (4-1). 만약 있다면 Delete 함수 호출(삭제)
+        if(result) {
+            // Admin 기능에 모달창 띄우기 연동
+            boolean isIndexExist = elasticsearchClient.IndexDelete(indexId);
+            log.info(">> Success Index Delete : {}", isIndexExist);
+        }
 
+        // 5. ES Index 생성
+        // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-index.html
+        BulkRequest bulkRequest = new BulkRequest();
+        // Json Data 변환
+        jsonData.forEach(map -> {
+            // log.info("map 전체 : {}", map.toString());
+            IndexRequest indexRequest = new IndexRequest(indexId);
+            // log.info("Primary Key : {}", map.get(docColumnId).toString());
+            indexRequest.id(map.get(docColumnId).toString()); // Doc id 할당
+            indexRequest.source(map); // Todo Template 과 Timestamp 불일치 오류 해결하기
+            // elasticsearchClient.indexCreate(indexRequest);
+            // 6. Bulk 하기
+            bulkRequest.add(indexRequest);
+        });
+        // ES Client Bulk 실행
+        elasticsearchClient.bulkInsert(bulkRequest);
     }
 
     /**
