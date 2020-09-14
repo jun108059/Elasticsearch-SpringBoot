@@ -1,8 +1,5 @@
 package com.searchengine.yjpark.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 public class Service {
 
     private Long idx;
@@ -10,18 +7,16 @@ public class Service {
     private String serviceDetail;
     private String bulkQuery;
     private Long dbIdx;
-    private String idColume;
-    private LocalDateTime createDt;
-    private LocalDateTime updateDt;
+    private String idColumn;
 
-    public String getIdColume() {
-        return idColume;
+
+    public String getIdColumn() {
+        return idColumn;
     }
 
-    public void setIdColume(String idColume) {
-        this.idColume = idColume;
+    public void setIdColumn(String idColumn) {
+        this.idColumn = idColumn;
     }
-
 
     public Long getId() {
         return idx;
@@ -30,7 +25,6 @@ public class Service {
     public void setId(Long idx) {
         this.idx = idx;
     }
-
 
     public String getServiceId() {
         return serviceId;
@@ -55,7 +49,6 @@ public class Service {
     public void setBulkQuery(String bulkQuery) {
         this.bulkQuery = bulkQuery;
     }
-
 
     public Long getDbIdx() {
         return dbIdx;

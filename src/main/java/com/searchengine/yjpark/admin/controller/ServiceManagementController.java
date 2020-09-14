@@ -61,7 +61,7 @@ public class ServiceManagementController {
         service.setServiceDetail(form.getServiceDetail());
         service.setBulkQuery(form.getBulkQuery());
         service.setDbIdx(form.getDbIdx());
-        service.setIdColume(form.getIdColume());
+        service.setIdColumn(form.getIdColumn());
 
         serviceService.registrationService(service);
 
@@ -85,7 +85,7 @@ public class ServiceManagementController {
         // form id 받기
         String serviceId = form.getServiceId();
         // id 일치하는 service List
-        List<Service> services = serviceService.findServiceByID(serviceId);
+        Service services = serviceService.findServiceByID(serviceId);
         model.addAttribute("services", services);
         return "simple/serviceList";
     }

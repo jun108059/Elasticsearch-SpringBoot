@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+@org.springframework.stereotype.Service
 public class ServiceService {
 
     private final ServiceRepository serviceRepository;
@@ -39,10 +40,20 @@ public class ServiceService {
 
     /**
      * host 정보로 db Info 불러오기
+     * @param dbIdx
+     * @return
+     */
+    public List<DataBaseInfo> findDbByIdx(Long dbIdx) {
+
+        return serviceRepository.findDbByIdx(dbIdx);
+    }
+
+    /**
+     * host 정보로 db Info 불러오기
      * @param host
      * @return
      */
-    public Optional<DataBaseInfo> findOne(String host) {
+    public Optional<DataBaseInfo> findDbByHost(String host) {
         return serviceRepository.findByHost(host);
     }
 
@@ -67,9 +78,9 @@ public class ServiceService {
 
     /**
      * ID에 맞는 서비스 정보 조회
-     * @return
+     * @return Service
      */
-    public List<Service> findServiceByID(String id) {
+    public Service findServiceByID(String id) {
         return serviceRepository.findServiceById(id);
     }
 }
