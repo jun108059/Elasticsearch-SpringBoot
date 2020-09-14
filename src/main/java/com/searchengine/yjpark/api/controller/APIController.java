@@ -5,7 +5,6 @@ import com.searchengine.yjpark.api.response.SearchResponse;
 import com.searchengine.yjpark.api.service.IndexService;
 import com.searchengine.yjpark.domain.Indexing;
 import com.searchengine.yjpark.domain.Search;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,23 +28,16 @@ public class APIController {
         log.info("Bulk Get : {}", serviceId);
         // 서비스 로직 호출
         indexService.bulkIndex(serviceId);
-
-
+        // Todo 컨트롤러에서 Response 반환할 필요가 있는지
     }
 
     // simple/search/contents/{serviceId}/{keyWord}
     @PostMapping("/contents")
     public void searchKeyword(@RequestBody Search search) {
-
+        // 클라이언트가 {서비스ID} + {검색단어} + {...} 선택 -> 검색 or JSON POST
         log.info("Search POST Test : {}", search.toString());
-    }
-
-    @PostMapping("/indexing/id")
-    public void indexingDocument(@RequestBody Indexing indexing) {
-        // 컨텐츠 부분 색인
-        // indexing > 서비스ID, 연산 타입, 컨텐츠 ID
-        // Todo 컨텐츠 id == 도큐먼트 ID?
-        log.info("Search POST Test : {}", indexing.toString());
+        // 서비스 로직 호출
+        indexService.searchKeyword(search);
     }
 
     @GetMapping("searchResponse")
@@ -58,7 +50,13 @@ public class APIController {
         return searchResponse;
     }
 
-
-
+    @PostMapping("/indexing/id")
+    public void indexingDocument(@RequestBody Indexing indexing) {
+        // 컨텐츠 부분 색인
+        // indexing > 서비스ID, 연산 타입, 컨텐츠 ID
+        // Todo 컨텐츠 id == 도큐먼트 ID?
+//        indexService
+        log.info("Search POST Test : {}", indexing.toString());
+    }
 }
 
