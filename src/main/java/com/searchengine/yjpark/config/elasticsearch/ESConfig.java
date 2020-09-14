@@ -1,7 +1,6 @@
 package com.searchengine.yjpark.config.elasticsearch;
 
 import com.searchengine.yjpark.es.client.ElasticsearchClient;
-import org.apache.http.HttpHost;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

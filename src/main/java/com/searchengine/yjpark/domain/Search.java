@@ -12,6 +12,7 @@ public class Search {
     private int pageSize;
     private int pageNo;
 
+
     public int getPageSize() {
         return pageSize;
     }
@@ -28,7 +29,6 @@ public class Search {
         this.pageNo = pageNo;
     }
 
-
     public String getServiceId() {
         return serviceId;
     }
@@ -37,7 +37,6 @@ public class Search {
         this.serviceId = serviceId;
     }
 
-
     public String getSearchText() {
         return searchText;
     }
@@ -45,7 +44,6 @@ public class Search {
     public void setSearchText(String searchText) {
         this.searchText = searchText;
     }
-
 
     public Map<String, Object> getHighlight() {
         return highlight;
