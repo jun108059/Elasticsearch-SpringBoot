@@ -2,6 +2,7 @@ package com.searchengine.yjpark;
 
 import com.searchengine.yjpark.repository.*;
 import com.searchengine.yjpark.admin.service.ServiceService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,12 +13,9 @@ public class SpringConfig {
 
     private final DataSource dataSource;
 
-    public SpringConfig(DataSource dataSource) {
+    public SpringConfig(@Qualifier("dataSource") DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    @Bean
-    public ServiceService serviceService() { return new ServiceService(serviceRepository());}
 
     @Bean
     public ServiceRepository serviceRepository() {
@@ -25,5 +23,9 @@ public class SpringConfig {
         return new JdbcTemplateServiceRepository(dataSource);
     }
 
+    @Bean
+    public BulkRepository bulkRepository() {
+        return new JdbcTemplateBulkRepository();
+    }
 
 }
