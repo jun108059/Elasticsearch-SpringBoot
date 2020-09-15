@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>서비스 목록 조회</title>
+    <script src="/js/includeHTML.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+
+<body>
+<nav include-html="/html/nav.html"></nav>
+<div class="container">
+    <br>
+    <div>
+        <h1>전체 서비스 index 조회</h1>
+        <p> <strong>Elasticsearch Index 목록</strong></p>
+    </div>
+
+    <div class="tableSubHeadingColor" th:object="${indexList}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>health</th>
+                <th>status</th>
+                <th>index</th>
+                <th>uuid</th>
+                <th>pri</th>
+                <th>rep</th>
+                <th>docs.count</th>
+                <th>docs.deleted</th>
+                <th>store.size</th>
+                <th>pri.store.size</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="list, index : ${indexList}">
+                <td th:text="${index.index + 1}"></td>
+                <td th:text="${list.get("health")}"></td>
+                <td th:text="${list.keySet()}"></td>
+                <td th:text="${list.values()}"></td>
+                <td th:text="${list.values()}"></td>
+                <td th:text="${list.values()}"></td>
+                <td th:text="${list.values()}"></td>
+                <td th:text="${list.values()}"></td>
+                <td th:text="${list.values()}"></td>
+                <td th:text="${list.values()}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+<script>
+    includeHTML();
+</script>
+</html>

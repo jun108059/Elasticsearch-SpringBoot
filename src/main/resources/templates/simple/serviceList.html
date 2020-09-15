@@ -33,6 +33,7 @@
             <tr>
                 <th>서비스 ID</th>
                 <th>설명</th>
+                <th>Bulk Query</th>
                 <th>Bulk하기</th>
             </tr>
             </thead>
@@ -40,7 +41,8 @@
             <tr th:each="service : ${services}">
                 <td th:text="${service.serviceId}"></td>
                 <td th:text="${service.serviceDetail}"></td>
-                <td>bulk 버튼</td>
+                <td th:text="${service.bulkQuery}"></td>
+                <td><a class="btn btn-primary" th:href="@{/simple/search/bulk(service_id=${service.serviceId})}"><span class="glyphicon glyphicon-save"></span> Bulk하기</a></td>
             </tr>
             </tbody>
         </table>
