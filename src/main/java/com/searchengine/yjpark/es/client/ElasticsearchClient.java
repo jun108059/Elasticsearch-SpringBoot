@@ -1,6 +1,7 @@
 package com.searchengine.yjpark.es.client;
 
 import org.apache.http.HttpHost;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -8,6 +9,7 @@ import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -15,12 +17,11 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.*;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,21 +101,18 @@ public class ElasticsearchClient {
      * 전체 데이터 Bulk(색인)
      * @param request
      */
-    public void bulkInsert(BulkRequest request) {
+    public boolean bulkInsert(BulkRequest request) {
+        // Todo Sync로 바꾸고 return 성공 실패 받아서 반환
         // @param 서비스 로직에서 생성된 Request
-        restHighLevelClient.bulkAsync(request, RequestOptions.DEFAULT, new ActionListener<BulkResponse>() {
-            // 비동기 처리이기 나중에 응답 받을 Listener
-            @Override
-            public void onResponse(BulkResponse bulkItemResponses) {
-                log.info("Bulk Success");
-            }
 
-            @Override
-            public void onFailure(Exception e) {
-                // 로그 남길 수 있고 핸들링 할 수 있음
-                log.error("Bulk Fail");
-            }
-        });
+        boolean bulkResult = false;
+        try {
+            BulkResponse bulkResponse = restHighLevelClient.bulk(request, RequestOptions.DEFAULT);
+            bulkResult = bulkResponse.hasFailures();
+        } catch (IOException e) {
+            log.error("Bulk Fail : {}", e.getMessage());
+        }
+        return bulkResult;
     }
 
     /**
@@ -193,40 +191,68 @@ public class ElasticsearchClient {
         // Request 요청 만들기
         SearchRequest searchRequest = new SearchRequest(indexName);
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = null;
+        SearchResponse Response = null;
+
+        log.info("searchRequest: {}",searchRequest);
 
         try {
             // 동기 Execution
-            searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            Response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
             log.error("Search Response Fail : {}", e.getMessage());
         }
 
-        return searchResponse;
+        // Todo 빈 리스트 응답으로 줘도 됨
+        return Response;
         // 서비스 로직에서 Map으로 Source, highlighting 꺼내오기
     }
 
     /**
      * 인덱스 리스트 가져오기
-     * @param prefixIndexName
      * @return boolean
      */
-    public boolean getIndexList(String prefixIndexName) {
-        // Todo Low Level로 리스트 가져오는거 만들어 오기
-        // High Level에 없음
-
-        // elasticsearchClient.getLowLevelClient().performRequest();
+    public String getIndexList() {
         // 검색 엔진에 색인된 모든 index List 가져오기
-        GetIndexRequest request = new GetIndexRequest(prefixIndexName);
-        GetIndexResponse getIndexResponse = null;
+
+        // Todo Low Level로 리스트 가져오는거 만들어 오기
+
+        String responseBody = "";
+        // High Level에 없음
+        RestClient lowLevelClient = restHighLevelClient.getLowLevelClient();
+
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html
+        // https://stackoverflow.com/questions/54181844/how-to-get-the-total-count-of-documnets-present-in-an-index-using-java-high-leve/54185106#54185106
+        Request request = new Request("GET", "/_cat/indices");
         try {
-            getIndexResponse = restHighLevelClient.indices().get(request, RequestOptions.DEFAULT);
+            Response response = lowLevelClient.performRequest(request);
+            responseBody = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("cat indices Fail : {},", e.getMessage());
         }
-        assert getIndexResponse != null;
-        getIndexResponse.getIndices();
-        return true;
+
+        return responseBody;
+    }
+
+    /**
+     * Document 존재 여부 검사 함수
+     * @param indexName
+     * @return boolean
+     */
+    public boolean isDocumentExist(String indexName, String documentId) {
+
+        GetRequest getRequest = new GetRequest(indexName, documentId);
+        // 공식문서에서 단순히 Exist 확인만 하기 때문에 source 패치와 fields 저장을 비활성화 추천
+        getRequest.fetchSourceContext(new FetchSourceContext(false));
+        getRequest.storedFields("_none_");
+
+        boolean exists = false;
+        try {
+            exists = restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("Document Exist check fail : {}", e.getMessage());
+        }
+
+        return exists;
     }
 
 }
