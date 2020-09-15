@@ -28,4 +28,8 @@ public class SpringConfig {
         return new JdbcTemplateBulkRepository();
     }
 
+    @Bean
+    public SearchRepository searchRepository() {
+        return new JdbcTemplateSearchRepository();
+    }
 }
