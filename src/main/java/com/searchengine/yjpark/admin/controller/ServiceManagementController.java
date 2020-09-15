@@ -1,10 +1,12 @@
 package com.searchengine.yjpark.admin.controller;
 
+import com.searchengine.yjpark.api.service.IndexService;
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
 import com.searchengine.yjpark.admin.service.ServiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ServiceManagementController {
@@ -19,6 +22,10 @@ public class ServiceManagementController {
 
 
     private final ServiceService serviceService;
+
+    @Autowired
+    IndexService indexService;
+
 
     public ServiceManagementController(ServiceService serviceService) {
         this.serviceService = serviceService;
@@ -79,14 +86,21 @@ public class ServiceManagementController {
         return "simple/serviceList";
     }
 
-    // 검색된 서비스만 띄우기
-    @PostMapping("/simple/serviceSearch")
+    // 색인된 인덱스 전체 띄우기
+    @GetMapping("/simple/viewBulkIndex")
     public String getServiceId(@ModelAttribute Service form, Model model) {
-        // form id 받기
-        String serviceId = form.getServiceId();
-        // id 일치하는 service List
-        Service services = serviceService.findServiceByID(serviceId);
-        model.addAttribute("services", services);
-        return "simple/serviceList";
+        // form 필요없음
+        // ES Client 에서 모든 index 리스트 조회하는 API 호출
+        // Model에 IndexList 만들고 addAttribute 하기
+
+        List<Map<String, Object>> indexList = indexService.getAllIndices();
+
+        model.addAttribute("indexList", indexList);
+
+        return "simple/search/indexList";
     }
+
+    // Error page 랜더링
+    @GetMapping("/simple/error")
+    public String errorPage() { return "simple/search/errorPage";}
 }

@@ -1,15 +1,15 @@
 package com.searchengine.yjpark.api.response;
 
 import java.util.List;
+import java.util.Map;
 
-public class SearchResponse {
+public class SearchResultResponse {
 
     private int total;
     private int page;
-    private int page_size;
-    private List<String> result;
+    private int pageSize;
+    private List<Map<String, Object>> result;
     // Request 전문 검색 조회 결과 컬럼 받기
-    private List<String> highlight;
 
     public int getTotal() {
         return total;
@@ -27,29 +27,18 @@ public class SearchResponse {
         this.page = page;
     }
 
-    public int getPage_size() {
-        return page_size;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public void setPage_size(int page_size) {
-        this.page_size = page_size;
+    public void setPageSize(int page_size) {
+        this.pageSize = page_size;
     }
 
-    public List<String> getResult() {
-        return result;
-    }
+    public List<Map<String, Object>> getResult() { return result; }
 
-    public void setResult(List<String> result) {
+    public void setResult(List<Map<String, Object>> result) {
         this.result = result;
     }
-
-    public List<String> getHighlight() {
-        return highlight;
-    }
-
-    public void setHighlight(List<String> highlight) {
-        this.highlight = highlight;
-    }
-    // Request 전문 하이라이팅 지정 컬럼 정보
 
 }
