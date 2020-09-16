@@ -29,7 +29,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>번호</th>
+                <th>No</th>
                 <th>health</th>
                 <th>status</th>
                 <th>index</th>
@@ -45,15 +45,17 @@
             <tbody>
             <tr th:each="list, index : ${indexList}">
                 <td th:text="${index.index + 1}"></td>
-                <td th:text="${list.get("health")}"></td>
-                <td th:text="${list.keySet()}"></td>
-                <td th:text="${list.values()}"></td>
-                <td th:text="${list.values()}"></td>
-                <td th:text="${list.values()}"></td>
-                <td th:text="${list.values()}"></td>
-                <td th:text="${list.values()}"></td>
-                <td th:text="${list.values()}"></td>
-                <td th:text="${list.values()}"></td>
+                <td th:text="${list.health}"></td>
+                <td th:text="${list.status}"></td>
+                <td th:text="${list.index}"></td>
+                <td th:text="${list.uuid}"></td>
+                <td th:text="${list.pri}"></td>
+                <td th:text="${list.rep}"></td>
+                <td th:text="${list.docsCount}"></td>
+                <td th:text="${list.docsDeleted}"></td>
+                <td th:text="${list.storeSize}"></td>
+                <td th:text="${list.priStoreSize}"></td>
+
             </tr>
         </table>
     </div>

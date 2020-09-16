@@ -251,14 +251,14 @@ public class IndexService {
         String documentId = indexing.getContentsIdValue(); // document id
         Map<String, Object> jsonMap = new HashMap<>();
         // @Test data
-        jsonMap.put("curation_seq", "300");
+        jsonMap.put("curation_seq", 301);
         jsonMap.put("curation_title", "테스트 document 생성했음");
         jsonMap.put("template", "5");
         jsonMap.put("template_img", null);
         jsonMap.put("ending_txt", "잘 생성됐는지 테스트");
         // 2. 이미 해당 번호 도큐먼트 존재하는지 여부 확인
         boolean isDocumentExist = elasticsearchClient.isDocumentExist(indexId, documentId);
-        if(isDocumentExist) {
+        if (isDocumentExist) {
             log.error("This DocumentID [ {} ] is Already Exist : ", documentId);
         }
 
@@ -284,16 +284,17 @@ public class IndexService {
         String documentId = indexing.getContentsIdValue(); // document id
         Map<String, Object> jsonMap = new HashMap<>();
         // @Test data
+        // ID에 대한 DB를
         jsonMap.put("curation_seq", "300");
         jsonMap.put("curation_title", "테스트 document 생성했음");
         jsonMap.put("template", "5");
         jsonMap.put("template_img", null);
         jsonMap.put("ending_txt", "잘 생성됐는지 테스트");
-
     }
 
     // 부분 색인 삭제 - Delete
     public void deleteDocument(Indexing indexing) {
+
 
     }
 
@@ -302,33 +303,27 @@ public class IndexService {
         String indicesList = elasticsearchClient.getIndexList();
         String[] temp_list = indicesList.split("\\s+");
         List<Map<String, Object>> indicesMap = new ArrayList<>();
-        Map<String, Object> jsonMap = new HashMap<>();
 
-        for(int i = 0; i < temp_list.length; i = i+10) {
+        for (int i = 0; i < temp_list.length; i = i + 10) {
+            Map<String, Object> jsonMap = new HashMap<>();
             jsonMap.put("health", temp_list[i]);
-            jsonMap.put("status", temp_list[i+1]);
-            jsonMap.put("index", temp_list[i+2]);
-            jsonMap.put("uuid", temp_list[i+3]);
-            jsonMap.put("pri", temp_list[i+4]);
-            jsonMap.put("rep", temp_list[i+5]);
-            jsonMap.put("docs.count", temp_list[i+6]);
-            jsonMap.put("docs.deleted", temp_list[i+7]);
-            jsonMap.put("store.size", temp_list[i+8]);
-            jsonMap.put("pri.store.size", temp_list[i+9]);
+            jsonMap.put("status", temp_list[i + 1]);
+            jsonMap.put("index", temp_list[i + 2]);
+            jsonMap.put("uuid", temp_list[i + 3]);
+            jsonMap.put("pri", temp_list[i + 4]);
+            jsonMap.put("rep", temp_list[i + 5]);
+            jsonMap.put("docsCount", temp_list[i + 6]);
+            jsonMap.put("docsDeleted", temp_list[i + 7]);
+            jsonMap.put("storeSize", temp_list[i + 8]);
+            jsonMap.put("priStoreSize", temp_list[i + 9]);
             indicesMap.add(jsonMap);
         }
-        jsonMap.get("health");
-        /*
-        for(int i=0; i < temp_list.length; i++){
-            log.info("splitList1 {} : {}", i, temp_list[i]);
-        }
-        */
 
-        // log.info("indicesList : {}", indicesList);
+        log.info("indicesList : {}", indicesMap);
         return indicesMap;
     }
 
-    public void testIsIndexExist(){
+    public void testIsIndexExist() {
         String indexName = "book";
         boolean result = elasticsearchClient.isIndexExist(indexName);
         log.info("client test : {}", result);
