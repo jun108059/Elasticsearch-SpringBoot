@@ -5,12 +5,12 @@ import com.searchengine.yjpark.api.response.SearchResultResponse;
 import com.searchengine.yjpark.api.service.IndexService;
 import com.searchengine.yjpark.domain.Indexing;
 import com.searchengine.yjpark.domain.Search;
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 
 @RestController
@@ -25,16 +25,16 @@ public class APIController {
     IndexService indexService;
 
     @GetMapping("/bulk")
-    public String bulkIndex(@RequestParam(value = "service_id")String serviceId) {
+    public RedirectView bulkIndex(@RequestParam(value = "service_id") String serviceId) {
         log.info("Bulk Get : {}", serviceId);
         // 서비스 로직 호출
+
         boolean bulkSuccess = indexService.bulkIndex(serviceId);
         log.info("bulkSuccess : {}", bulkSuccess);
-        if(bulkSuccess) {
-            return "/simple/viewBulkIndex";
-        }
-        else {
-           return "/simple/error";
+        if (bulkSuccess) {
+            return new RedirectView("/simple/viewBulkIndex");
+        } else {
+            return new RedirectView("redirect:/simple/error");
         }
     }
 
@@ -69,7 +69,7 @@ public class APIController {
     public void indexingUpdateDocument(@RequestBody Indexing indexing) {
         // 컨텐츠 부분 색인 (수정)
         // indexing > 서비스ID, 연산 타입, 컨텐츠 ID
-        log.info("Search POST Test : {}", indexing.toString());
+        log.info("Search PUT Test : {}", indexing.toString());
         indexService.updateDocument(indexing);
     }
 
@@ -77,7 +77,7 @@ public class APIController {
     public void indexingDeleteDocument(@RequestBody Indexing indexing) {
         // 컨텐츠 부분 색인 (삭제)
         // indexing > 서비스ID, 연산 타입, 컨텐츠 ID
-        log.info("Search POST Test : {}", indexing.toString());
+        log.info("Search DELETE Test : {}", indexing.toString());
         indexService.deleteDocument(indexing);
     }
 }

@@ -26,7 +26,7 @@
         <h1>서비스 List</h1>
     </div>
 
-<!--    <form action="/simple/search/bulk" method="post">-->
+    <!--    <form action="/simple/search/bulk" method="post">-->
     <div class="tableSubHeadingColor">
         <table class="table table-striped">
             <thead>
@@ -34,7 +34,7 @@
                 <th>서비스 ID</th>
                 <th>설명</th>
                 <th>Bulk Query</th>
-                <th>Bulk하기</th>
+                <th>Bulk</th>
             </tr>
             </thead>
             <tbody>
@@ -42,42 +42,51 @@
                 <td th:text="${service.serviceId}"></td>
                 <td th:text="${service.serviceDetail}"></td>
                 <td th:text="${service.bulkQuery}"></td>
-                <td><a class="btn btn-primary" th:href="@{/simple/search/bulk(service_id=${service.serviceId})}"><span class="glyphicon glyphicon-save"></span> Bulk하기</a></td>
+                <td><a class="btn btn-primary" th:href="@{/simple/search/bulk(service_id=${service.serviceId})}"
+                       onclick="return confirm('Bulk를 할까요?');" ><span
+                        class="glyphicon glyphicon-save"></span>Bulk</a></td>
             </tr>
             </tbody>
         </table>
-<!--
-        &lt;!&ndash; customers pagination &ndash;&gt;
-        <nav aria-label="Pagination" th:if="${customers.totalPages gt 0}">
-            <ul class="pagination justify-content-center font-weight-bold">
-                <li class="page-item" th:classappend="${customers.number eq 0} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/customers?page={id}(id=${customers.number lt 2 ? 1 : customers.number})}"
-                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item" th:classappend="${i eq customers.number + 1} ? 'active'"
-                    th:each="i : ${#numbers.sequence( 1, customers.totalPages, 1)}">
-                    <a class="page-link" th:href="@{/customers?page={id}(id=${i})}" th:text="${i}"
-                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-                </li>
-                <li class="page-item" th:classappend="${customers.number + 1 eq customers.totalPages} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/customers?page={id}(id=${customers.number + 2})}"
-                       aria-label="Next" title="Next Page" data-toggle="tooltip">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>-->
+        <!--
+                &lt;!&ndash; customers pagination &ndash;&gt;
+                <nav aria-label="Pagination" th:if="${customers.totalPages gt 0}">
+                    <ul class="pagination justify-content-center font-weight-bold">
+                        <li class="page-item" th:classappend="${customers.number eq 0} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/customers?page={id}(id=${customers.number lt 2 ? 1 : customers.number})}"
+                               aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:classappend="${i eq customers.number + 1} ? 'active'"
+                            th:each="i : ${#numbers.sequence( 1, customers.totalPages, 1)}">
+                            <a class="page-link" th:href="@{/customers?page={id}(id=${i})}" th:text="${i}"
+                               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${customers.number + 1 eq customers.totalPages} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/customers?page={id}(id=${customers.number + 2})}"
+                               aria-label="Next" title="Next Page" data-toggle="tooltip">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>-->
     </div>
-<!--    </form>-->
+    <!--    </form>-->
 
 
 </div> <!-- /container -->
 </body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
     includeHTML();
+    $(document).ready(function () {
+        $("#btn").click(function () {
+            var returnValue = confirm('존재하는 서비스입니다.\n 삭제하시면 검색엔진에 색인된 데이터가 모두 삭제됩니다.');
+            $('#form').submit();
+        });
+    });
 </script>
 </html>

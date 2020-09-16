@@ -2,7 +2,6 @@ package com.searchengine.yjpark.es.client;
 
 import org.apache.http.HttpHost;
 import org.apache.http.util.EntityUtils;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -19,7 +18,6 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.*;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 import org.slf4j.Logger;
@@ -31,7 +29,6 @@ import java.util.Map;
 public class ElasticsearchClient {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
     // 생성자
     private final RestHighLevelClient restHighLevelClient;
 
@@ -41,15 +38,16 @@ public class ElasticsearchClient {
     }
 
     // 클라이언트 부를 getter
-    public RestHighLevelClient getRestHighLevelClient(){
+    public RestHighLevelClient getRestHighLevelClient() {
         return restHighLevelClient;
     }
 
     /**
      * index Response 실행
+     *
      * @param indexRequest
      */
-    public void indexCreate(IndexRequest indexRequest){
+    public void indexCreate(IndexRequest indexRequest) {
         try {
             IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
@@ -59,6 +57,7 @@ public class ElasticsearchClient {
 
     /**
      * index 존재 여부 검사 함수
+     *
      * @param indexName
      * @return boolean
      */
@@ -79,6 +78,7 @@ public class ElasticsearchClient {
 
     /**
      * index 삭제 함수
+     *
      * @param indexName
      * @return boolean
      */
@@ -99,6 +99,7 @@ public class ElasticsearchClient {
 
     /**
      * 전체 데이터 Bulk(색인)
+     *
      * @param request
      */
     public boolean bulkInsert(BulkRequest request) {
@@ -112,17 +113,18 @@ public class ElasticsearchClient {
         } catch (IOException e) {
             log.error("Bulk Fail : {}", e.getMessage());
         }
-        return bulkResult;
+        return !bulkResult;
     }
 
     /**
      * ES document 생성
+     *
      * @param indexName
      * @param documentId
      * @param jsonMap
      * @return boolean
      */
-    public boolean documentCreate(String indexName, String documentId, Map<String, Object> jsonMap){
+    public boolean documentCreate(String indexName, String documentId, Map<String, Object> jsonMap) {
         // 어떤 인덱스에 넣을지 = indexName
         // 어떤 데이터를 넣을지 = jsonMap
         boolean result = false;
@@ -141,6 +143,7 @@ public class ElasticsearchClient {
 
     /**
      * ES document 업데이트
+     *
      * @param indexName
      * @param documentId
      * @param jsonMap
@@ -164,6 +167,7 @@ public class ElasticsearchClient {
 
     /**
      * ES document 삭제
+     *
      * @param indexName
      * @param documentId
      * @return boolean
@@ -183,6 +187,7 @@ public class ElasticsearchClient {
 
     /**
      * 검색
+     *
      * @param indexName
      * @param searchSourceBuilder
      * @return SearchResponse
@@ -193,7 +198,7 @@ public class ElasticsearchClient {
         searchRequest.source(searchSourceBuilder);
         SearchResponse Response = null;
 
-        log.info("searchRequest: {}",searchRequest);
+        log.info("searchRequest: {}", searchRequest);
 
         try {
             // 동기 Execution
@@ -209,6 +214,7 @@ public class ElasticsearchClient {
 
     /**
      * 인덱스 리스트 가져오기
+     *
      * @return boolean
      */
     public String getIndexList() {
@@ -235,6 +241,7 @@ public class ElasticsearchClient {
 
     /**
      * Document 존재 여부 검사 함수
+     *
      * @param indexName
      * @return boolean
      */
@@ -254,5 +261,4 @@ public class ElasticsearchClient {
 
         return exists;
     }
-
 }

@@ -20,8 +20,8 @@ public class ServiceService {
 
     /**
      * 데이터베이스 정보 등록
-     * @param dataBaseInfo
      *
+     * @param dataBaseInfo
      */
     public void registrationDB(DataBaseInfo dataBaseInfo) {
 
@@ -32,6 +32,7 @@ public class ServiceService {
 
     /**
      * 전체 데이터베이스 정보 조회
+     *
      * @return
      */
     public List<DataBaseInfo> findAllDBInfo() {
@@ -40,6 +41,7 @@ public class ServiceService {
 
     /**
      * host 정보로 db Info 불러오기
+     *
      * @param dbIdx
      * @return
      */
@@ -50,6 +52,7 @@ public class ServiceService {
 
     /**
      * host 정보로 db Info 불러오기
+     *
      * @param host
      * @return
      */
@@ -59,6 +62,7 @@ public class ServiceService {
 
     /**
      * 서비스 등록
+     *
      * @param
      * @return
      */
@@ -70,6 +74,7 @@ public class ServiceService {
 
     /**
      * 전체 서비스 정보 조회
+     *
      * @return
      */
     public List<Service> findAllService() {
@@ -78,6 +83,7 @@ public class ServiceService {
 
     /**
      * ID에 맞는 서비스 정보 조회
+     *
      * @return Service
      */
     public Service findServiceByID(String id) {

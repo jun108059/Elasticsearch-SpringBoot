@@ -35,7 +35,9 @@ public class SearchResultResponse {
         this.pageSize = page_size;
     }
 
-    public List<Map<String, Object>> getResult() { return result; }
+    public List<Map<String, Object>> getResult() {
+        return result;
+    }
 
     public void setResult(List<Map<String, Object>> result) {
         this.result = result;

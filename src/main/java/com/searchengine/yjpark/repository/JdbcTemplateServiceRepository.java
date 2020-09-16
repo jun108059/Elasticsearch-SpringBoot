@@ -26,6 +26,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     @Override
     public DataBaseInfo save(DataBaseInfo dataBaseInfo) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("database_list").usingGeneratedKeyColumns("idx");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("db_conn_ip", dataBaseInfo.getDbConnIp());
@@ -118,7 +119,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     public String findBulkQuery(String id) {
         String sql = "SELECT bulk_query FROM service WHERE service_id = ?";
 
-        String bulkQuery = (String) jdbcTemplate.queryForObject(sql, new Object[] { id }, String.class);
+        String bulkQuery = (String) jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
         return bulkQuery;
     }
 
@@ -126,7 +127,7 @@ public class JdbcTemplateServiceRepository implements ServiceRepository {
     public int findDbIdx(String id) {
         String sql = "SELECT db_idx FROM service WHERE service_id = ?";
 
-        int dbIdx = (int) jdbcTemplate.queryForObject(sql, new Object[] { id }, Integer.class);
+        int dbIdx = (int) jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
 
         return dbIdx;
     }

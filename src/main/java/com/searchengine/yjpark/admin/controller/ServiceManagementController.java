@@ -1,9 +1,9 @@
 package com.searchengine.yjpark.admin.controller;
 
+import com.searchengine.yjpark.admin.service.ServiceService;
 import com.searchengine.yjpark.api.service.IndexService;
 import com.searchengine.yjpark.domain.DataBaseInfo;
 import com.searchengine.yjpark.domain.Service;
-import com.searchengine.yjpark.admin.service.ServiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,9 @@ public class ServiceManagementController {
 
     // DB 정보 등록하는 page 랜더링
     @GetMapping("/simple/createDBInfo")
-    public String createForm() { return "simple/createDBInfo";}
+    public String createForm() {
+        return "simple/createDBInfo";
+    }
 
     // post로 전달받은 data 넣기
     @PostMapping("/simple/createDBInfo")
@@ -53,7 +55,7 @@ public class ServiceManagementController {
     @GetMapping("/simple/serviceInfo")
     public String createService(Model model) {
         // 저장된 DB 정보 가져오기
-        List<DataBaseInfo> dbInfo= serviceService.findAllDBInfo();
+        List<DataBaseInfo> dbInfo = serviceService.findAllDBInfo();
         log.info("dbInfo : {}", dbInfo.get(1).getIdx());
         model.addAttribute("dbInfo", dbInfo);
         return "simple/serviceInfo";
@@ -80,7 +82,7 @@ public class ServiceManagementController {
     @GetMapping("/simple/serviceList")
     public String serviceList(Model model) {
         // 저장된 Service 정보 가져오기
-        List<Service> services= serviceService.findAllService();
+        List<Service> services = serviceService.findAllService();
         model.addAttribute("services", services);
         log.info("service Count: {}", services.size());
         return "simple/serviceList";
@@ -102,5 +104,7 @@ public class ServiceManagementController {
 
     // Error page 랜더링
     @GetMapping("/simple/error")
-    public String errorPage() { return "simple/search/errorPage";}
+    public String errorPage() {
+        return "simple/search/errorPage";
+    }
 }

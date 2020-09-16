@@ -6,9 +6,9 @@ spring:
   main:
     banner-mode: OFF
   thymeleaf:
-    prefix : classpath:templates/
-    suffix : .html
-    cache : false
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/search_engine?serverTimezone=UTC&characterEncoding=UTF-8

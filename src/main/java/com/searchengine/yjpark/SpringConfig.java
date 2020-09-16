@@ -1,7 +1,6 @@
 package com.searchengine.yjpark;
 
 import com.searchengine.yjpark.repository.*;
-import com.searchengine.yjpark.admin.service.ServiceService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +27,4 @@ public class SpringConfig {
         return new JdbcTemplateBulkRepository();
     }
 
-    @Bean
-    public SearchRepository searchRepository() {
-        return new JdbcTemplateSearchRepository();
-    }
 }

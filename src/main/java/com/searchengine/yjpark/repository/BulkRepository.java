@@ -7,5 +7,6 @@ import java.util.Map;
 
 public interface BulkRepository {
     int countCuration(List<DataBaseInfo> dbInfo, com.searchengine.yjpark.domain.Service serviceInfo);
+
     List<Map<String, Object>> dynamicMapping(List<DataBaseInfo> dbInfo, com.searchengine.yjpark.domain.Service serviceInfo);
 }
