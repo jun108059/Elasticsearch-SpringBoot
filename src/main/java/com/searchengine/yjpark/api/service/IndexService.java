@@ -7,7 +7,6 @@ import com.searchengine.yjpark.domain.Indexing;
 import com.searchengine.yjpark.domain.Search;
 import com.searchengine.yjpark.es.client.ElasticsearchClient;
 import com.searchengine.yjpark.repository.BulkRepository;
-import com.searchengine.yjpark.repository.SearchRepository;
 import com.searchengine.yjpark.repository.ServiceRepository;
 import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -42,13 +41,11 @@ public class IndexService {
     BulkRepository bulkRepository;
 
     @Autowired
-    SearchRepository searchRepository;
-
-    @Autowired
     ServiceService serviceService;
 
     /**
      * 전체 색인(Bulk) 서비스
+     *
      * @param serviceId
      */
     public boolean bulkIndex(String serviceId) {
@@ -74,8 +71,9 @@ public class IndexService {
         // 4. Index 존재하는지 검사
         boolean result = elasticsearchClient.isIndexExist(indexId);
         log.info("기존 Index 가 있는지 : {}", result);
+        log.info("총 색인 건수 : {}", countRow);
         // (4-1). 만약 있다면 Delete 함수 호출(삭제)
-        if(result) {
+        if (result) {
             // Admin 기능에 모달창 띄우기 연동
             boolean isIndexExist = elasticsearchClient.IndexDelete(indexId);
             log.info(">> Success Index Delete : {}", isIndexExist);
@@ -102,6 +100,7 @@ public class IndexService {
 
     /**
      * 검색 서비스 로직
+     *
      * @param search
      * @return SearchResponse
      */
@@ -165,7 +164,14 @@ public class IndexService {
         }
 
          */
-        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(searchText, columnNames.get(0), columnNames.get(1)));
+
+        String[] str = new String[columnNames.size()];
+
+        for(int i = 0; i< columnNames.size(); i++) {
+            str[i] = columnNames.get(i);
+        }
+
+        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(searchText, str));
 
         // 1-3. 하이라이트 query 만들어주는 Builder
         HighlightBuilder highlightBuilder = new HighlightBuilder();
@@ -199,7 +205,7 @@ public class IndexService {
         SearchResultResponse searchResultResponse = new SearchResultResponse();
         SearchHits hits = searchResponse.getHits();
         TotalHits totalHits = hits.getTotalHits();
-        int numHits = (int)totalHits.value;
+        int numHits = (int) totalHits.value;
         // @TEST
         log.info("total hit : {}", numHits);
 
@@ -220,9 +226,9 @@ public class IndexService {
             Map<String, HighlightField> highlightField = hit.getHighlightFields();
             Map<String, Object> hl = new HashMap<>();
             highlightField.forEach((s, highlightField1) -> {
-                Text[] frag = highlightField1.getFragments();
-                hl.put(s, frag[0].toString());
-                }
+                        Text[] frag = highlightField1.getFragments();
+                        hl.put(s, frag[0].toString());
+                    }
             );
             Map<String, Object> jsonString = hit.getSourceAsMap();
             jsonString.put("highlight", hl);
