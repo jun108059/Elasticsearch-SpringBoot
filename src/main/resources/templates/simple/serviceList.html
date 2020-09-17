@@ -31,7 +31,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>서비스 ID</th>
+                <th>ID</th>
                 <th>설명</th>
                 <th>Bulk Query</th>
                 <th>Bulk</th>
@@ -39,12 +39,16 @@
             </thead>
             <tbody>
             <tr th:each="service : ${services}">
-                <td th:text="${service.serviceId}"></td>
+
+                <td th:text="${service.serviceId}" id="serviceId"></td>
                 <td th:text="${service.serviceDetail}"></td>
                 <td th:text="${service.bulkQuery}"></td>
                 <td><a class="btn btn-primary" th:href="@{/simple/search/bulk(service_id=${service.serviceId})}"
-                       onclick="return confirm('Bulk를 할까요?');" ><span
+                       onclick="return confirm('Bulk를 할까요?');"><span
                         class="glyphicon glyphicon-save"></span>Bulk</a></td>
+<!--                <td>-->
+<!--                    <button class="btn btn-primary" id="bth-bulk">Bulk</button>-->
+<!--                </td>-->
             </tr>
             </tbody>
         </table>
@@ -82,11 +86,52 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
     includeHTML();
-    $(document).ready(function () {
-        $("#btn").click(function () {
-            var returnValue = confirm('존재하는 서비스입니다.\n 삭제하시면 검색엔진에 색인된 데이터가 모두 삭제됩니다.');
-            $('#form').submit();
+/*    $(document).ready(function () {
+
+        $("btn-bulk").on('click', function(){
+            var form = {
+                service_id : $("#serviceId").val()
+            }
+            $.ajax({
+                type: "POST",
+                url: "/simple/search/checkIndexExist",
+                data: form,
+                success: function (data) {
+                    $('#result').text(data);
+                },
+                error: function() {
+                    alert("error");
+                }
+            });
+        // $("#bth-bulk").click(function () {
+        //     fire_ajax_submit();
+        // });
+    });*/
+
+/*    function fire_ajax_submit() {
+        var serviceId = $("#serviceId").val();
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/simple/search/checkIndexExist",
+            data: serviceId,
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                if(data.msg === "Exist"){
+                    if(confirm("색인 건수 : " + data.count + "\n삭제하고 재생성할까요?")){
+                        let url = "/simple/search/bulk?service_id=service3";
+                        location.href = url;
+                    }else{
+                        location.href = "/simple/serviceList";
+                    }
+                } else{
+                    let url = "/simple/search/bulk?"+serviceId;
+                    location.href = url;
+                }
+            }
         });
-    });
+    }*/
 </script>
 </html>
