@@ -3,12 +3,14 @@ package com.searchengine.yjpark.api.controller;
 
 import com.searchengine.yjpark.api.response.SearchResultResponse;
 import com.searchengine.yjpark.api.service.IndexService;
+import com.searchengine.yjpark.domain.AjaxResponseBody;
 import com.searchengine.yjpark.domain.Indexing;
 import com.searchengine.yjpark.domain.Search;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -48,15 +50,6 @@ public class APIController {
         return indexService.searchKeyword(search);
     }
 
-    @GetMapping("searchResponse")
-    public SearchResultResponse getSearchResponse() {
-        SearchResultResponse searchResultResponse = new SearchResultResponse();
-        searchResultResponse.setTotal(1233);
-        indexService.testIsIndexExist();
-
-        return searchResultResponse;
-    }
-
     @PostMapping("/indexing/id")
     public void indexingCreateDocument(@RequestBody Indexing indexing) {
         // 컨텐츠 부분 색인 (생성)
@@ -80,5 +73,31 @@ public class APIController {
         log.info("Search DELETE Test : {}", indexing.toString());
         indexService.deleteDocument(indexing);
     }
+
+    @GetMapping("/delete")
+    public RedirectView deleteIndex(@RequestParam(value = "service_id") String serviceId) {
+        log.info("Delete Get : {}", serviceId);
+        // 서비스 로직 호출
+        boolean deleteSuccess = indexService.deleteIndex(serviceId);
+        if (deleteSuccess) {
+            return new RedirectView("/simple/viewBulkIndex");
+        } else {
+            return new RedirectView("redirect:/simple/error");
+        }
+    }
+
+    @PostMapping("/checkIndexExist")
+    public ResponseEntity<?> indexCheck(@RequestBody String serviceId) {
+        AjaxResponseBody result = new AjaxResponseBody();
+
+        if (indexService.myIndexExist(serviceId)) {
+            result.setMsg("Exist");
+            result.setCount(indexService.IndexCount(serviceId));
+        }else {
+            result.setMsg("NotExist");
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }
 

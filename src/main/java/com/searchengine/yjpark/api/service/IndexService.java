@@ -47,6 +47,7 @@ public class IndexService {
      * 전체 색인(Bulk) 서비스
      *
      * @param serviceId
+     * @return
      */
     public boolean bulkIndex(String serviceId) {
         // 1. serviceId와 일치하는 service BulkQuery 가져오기
@@ -61,10 +62,7 @@ public class IndexService {
         int countRow = bulkRepository.countCuration(dbInfo, serviceInfo);
 
         // 3. MySQL 데이터 Json 형식 변환
-        // https://stackoverflow.com/questions/58772409/convert-all-the-mysql-table-data-into-json-in-spring-boot
         List<Map<String, Object>> jsonData = bulkRepository.dynamicMapping(dbInfo, serviceInfo);
-        // @Test Code
-        // jsonData.forEach(x -> log.info("test Code : {}", x));
 
         String indexId = "my_" + serviceId; // prefix 설정
 
@@ -79,22 +77,16 @@ public class IndexService {
             log.info(">> Success Index Delete : {}", isIndexExist);
         }
 
-        // 5. ES Index 생성
-        // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-index.html
+        // 5. ES Index 생성 (bulk Request)
         BulkRequest bulkRequest = new BulkRequest();
         // Json Data 변환
         jsonData.forEach(map -> {
-            // log.info("map 전체 : {}", map.toString());
             IndexRequest indexRequest = new IndexRequest(indexId);
-            // log.info("Primary Key : {}", map.get(docColumnId).toString());
             indexRequest.id(map.get(docColumnId).toString()); // Doc id 할당
-            indexRequest.source(map); // Todo Template 과 Timestamp 불일치 오류 해결하기
-            // elasticsearchClient.indexCreate(indexRequest);
-            // 6. Bulk 하기
+            indexRequest.source(map);
             bulkRequest.add(indexRequest);
         });
         // ES Client Bulk 실행
-        // Todo 성공 실패 받기
         return elasticsearchClient.bulkInsert(bulkRequest);
     }
 
@@ -150,20 +142,6 @@ public class IndexService {
         // 1. SourceBuilder (Search Query 만들기, 결과 source filter, 하이라이팅 빌더)
         // 1-1. 결과필드지정 query 만들어주는 Builder
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); // 검색 관련 @param 추가하는 builder
-        // Todo MatchQuery 이슈 해결하기
-        // 1-2. Match Qurty 적용
-//        searchSourceBuilder1.query(QueryBuilders.multiMatchQuery(searchText, {동적Field lists})); // Todo 동적 lists 할당법
-//        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(searchText, columnNames.get(0), columnNames.get(1)));
-//        searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.matchQuery(searchText, resultColumns)));
-
-        // 이렇게 하니 match Query 가 덮어쓰기 됨
-
-        /*
-        for (String result : resultColumns) {
-            searchSourceBuilder.query(QueryBuilders.matchQuery(searchText, result));
-        }
-
-         */
 
         String[] str = new String[columnNames.size()];
 
@@ -190,11 +168,6 @@ public class IndexService {
         searchSourceBuilder.from(pageNo);
         searchSourceBuilder.size(pageSize);
 
-        // 1-6. (만약 위에서 잘못됐으면) 하이라이트 생성
-        // searchSourceBuilder.highlighter(highlightBuilder);
-
-        // 1-7. 설정된 Builder ES 클라이언트에 넘겨주기
-
         // 6. 컨트롤러에 전달
 
         SearchResponse searchResponse = elasticsearchClient.search(serviceId, searchSourceBuilder);
@@ -209,17 +182,10 @@ public class IndexService {
         // @TEST
         log.info("total hit : {}", numHits);
 
-        // Todo Result 결과 필드 가져오는 법
-        // Get Source API 에 있는 줄 알았는데 안됨
-        // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.9/java-rest-high-document-get-source.html
-
         SearchHits highlightHit = searchResponse.getHits();
-
-        // SearchHit test = searchResponse.getHits().getAt(1).highlightFields();
 
 
         // 검색 결과 저장하는 for 문
-        // resultList 안에 add 칠때 highlight가 key : value(
         List<Map<String, Object>> resultList = new ArrayList<>();
         for (SearchHit hit : searchResponse.getHits()) {
             log.info("highlight : {}", hit.getHighlightFields());
@@ -232,9 +198,7 @@ public class IndexService {
             );
             Map<String, Object> jsonString = hit.getSourceAsMap();
             jsonString.put("highlight", hl);
-//            log.info("JSON 어떻게 들어가? : {}", jsonString);
             resultList.add(jsonString);
-            // resultList.add(hit.getHighlightFields());
         }
 
         searchResultResponse.setTotal(numHits);
@@ -305,6 +269,7 @@ public class IndexService {
         List<Map<String, Object>> indicesMap = new ArrayList<>();
 
         for (int i = 0; i < temp_list.length; i = i + 10) {
+            if(!temp_list[i + 2].startsWith("my_")) continue;
             Map<String, Object> jsonMap = new HashMap<>();
             jsonMap.put("health", temp_list[i]);
             jsonMap.put("status", temp_list[i + 1]);
@@ -323,10 +288,52 @@ public class IndexService {
         return indicesMap;
     }
 
-    public void testIsIndexExist() {
-        String indexName = "book";
-        boolean result = elasticsearchClient.isIndexExist(indexName);
-        log.info("client test : {}", result);
+    /**
+     * index 삭제하기
+     *
+     * @param serviceId
+     * @return 삭제됐는지 True or False
+     */
+    public boolean deleteIndex(String serviceId) {
+        // 1. serviceId와 일치하는 service BulkQuery 가져오기
+
+        boolean isIndexDelete = false;
+
+        // Index 존재하는지 검사
+        boolean result = elasticsearchClient.isIndexExist(serviceId);
+        if (result) {
+            isIndexDelete = elasticsearchClient.IndexDelete(serviceId);
+            log.info(">> Success Index Delete : {}", isIndexDelete);
+        }
+        return isIndexDelete;
     }
 
+    /**
+     * 인덱스가 존재하는지 검사
+     *
+     * @param serviceId
+     * @return 존재 여부 True False
+     */
+    public boolean myIndexExist(String serviceId) {
+
+        return elasticsearchClient.isIndexExist(serviceId);
+    }
+
+    /**
+     * 색인 건수가 몇개 인지
+     *
+     * @param serviceId
+     * @return 색인 건수 몇개인지
+     */
+    public long IndexCount(String serviceId) {
+        // 1. serviceId와 일치하는 service BulkQuery 가져오기
+        com.searchengine.yjpark.domain.Service serviceInfo = serviceService.findServiceByID(serviceId);
+        Long dbIdx = serviceInfo.getDbIdx(); // db 정보 가져오기 위해
+        String docColumnId = serviceInfo.getIdColumn();
+        List<DataBaseInfo> dbInfo = serviceService.findDbByIdx(dbIdx);
+        // 2. DB 정보로 동적 연결 - bulk Model 호출
+        long countRow = (long)bulkRepository.countCuration(dbInfo, serviceInfo);
+
+        return countRow;
+    }
 }
