@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -215,11 +216,15 @@ public class IndexService {
         String documentId = indexing.getContentsIdValue(); // document id
         Map<String, Object> jsonMap = new HashMap<>();
         // @Test data
-        jsonMap.put("curation_seq", 301);
-        jsonMap.put("curation_title", "테스트 document 생성했음");
+        SimpleDateFormat format = new SimpleDateFormat ( "yyyy년 MM월dd일 HH시mm분ss초");
+        Date time = new Date();
+        String strTime = format.format(time);
+
+        jsonMap.put("curation_seq", documentId);
+        jsonMap.put("curation_title", "부분색인 POST - 테스트 document 생성!");
         jsonMap.put("template", "5");
         jsonMap.put("template_img", null);
-        jsonMap.put("ending_txt", "잘 생성됐는지 테스트");
+        jsonMap.put("ending_txt", strTime);
         // 2. 이미 해당 번호 도큐먼트 존재하는지 여부 확인
         boolean isDocumentExist = elasticsearchClient.isDocumentExist(indexId, documentId);
         if (isDocumentExist) {
@@ -227,18 +232,8 @@ public class IndexService {
         }
 
         // 3. 색인 생성(도큐먼트 한개)
-        boolean result = elasticsearchClient.documentCreate(indexId, documentId, jsonMap);
-
-        // 4. 색인 업데이트(도큐먼트 한개 업데이트)
-        // 4.1 해당 번호 도큐먼트가 있는지(없으면 튕기기 or 새로 생성)
-        // 4.2 업데이트하는 ES 클라이언트 호출
-        // 5. 색인 삭제(도큐먼트 한개 삭제)
-        // 5-1. 삭제할 도큐먼트가 있는지 (4-1 같은 맥락)
-        // 5-2. 삭제하는 ES 클라이언트 호출
-        // 색인 완료되면 @return true
-
-        indexing.getServiceId();
-
+        boolean createResult = elasticsearchClient.documentCreate(indexId, documentId, jsonMap);
+        log.info("부분색인 - createResult : {}", createResult);
     }
 
     // 부분 색인 업데이트 - Update
@@ -248,18 +243,26 @@ public class IndexService {
         String documentId = indexing.getContentsIdValue(); // document id
         Map<String, Object> jsonMap = new HashMap<>();
         // @Test data
-        // ID에 대한 DB를
-        jsonMap.put("curation_seq", "300");
-        jsonMap.put("curation_title", "테스트 document 생성했음");
+        SimpleDateFormat format = new SimpleDateFormat ( "yyyy년 MM월dd일 HH시mm분ss초");
+        Date time = new Date();
+        String strTime = format.format(time);
+        jsonMap.put("curation_seq", documentId);
+        jsonMap.put("curation_title", "부분색인 PUT - 기존 doc 업데이트");
         jsonMap.put("template", "5");
         jsonMap.put("template_img", null);
-        jsonMap.put("ending_txt", "잘 생성됐는지 테스트");
+        jsonMap.put("ending_txt", strTime);
+
+        // 2. 업데이트
+        boolean updateResult = elasticsearchClient.documentUpdate(indexId, documentId, jsonMap);
+        log.info("부분색인 - updateResult : {}", updateResult);
     }
 
     // 부분 색인 삭제 - Delete
     public void deleteDocument(Indexing indexing) {
-
-
+        String indexId = indexing.getServiceId(); // 인덱스 id
+        String documentId = indexing.getContentsIdValue(); // document id
+        boolean deleteResult = elasticsearchClient.documentDelete(indexId, documentId);
+        log.info("부분색인 - deleteResult : {}", deleteResult);
     }
 
     // 전체 Indices 가져오기
