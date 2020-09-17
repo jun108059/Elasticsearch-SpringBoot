@@ -101,6 +101,7 @@ public class ElasticsearchClient {
      * 전체 데이터 Bulk(색인)
      *
      * @param request
+     * @return bulk 성공 여부
      */
     public boolean bulkInsert(BulkRequest request) {
         // Todo Sync로 바꾸고 return 성공 실패 받아서 반환

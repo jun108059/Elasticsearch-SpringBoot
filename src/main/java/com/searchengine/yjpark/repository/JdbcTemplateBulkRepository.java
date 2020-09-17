@@ -10,9 +10,10 @@ public class JdbcTemplateBulkRepository implements BulkRepository {
 
     /**
      * 데이터베이스 정보 동적을 연결
+     *
      * @param dbInfo
      * @param serviceInfo
-     * @return
+     * @return 연결된 DB 정보 Query Map List
      */
     @Override
     public List<Map<String, Object>> dynamicMapping (List<DataBaseInfo> dbInfo, com.searchengine.yjpark.domain.Service serviceInfo) {
@@ -37,10 +38,11 @@ public class JdbcTemplateBulkRepository implements BulkRepository {
     }
 
     /**
-     * Test Code - Curation Row 개수 출력
+     * Curation Row 개수 출력
+     *
      * @param dbInfo
      * @param serviceInfo
-     * @return
+     * @return Row 개수
      */
     @Override
     public int countCuration (List<DataBaseInfo> dbInfo, com.searchengine.yjpark.domain.Service serviceInfo) {
