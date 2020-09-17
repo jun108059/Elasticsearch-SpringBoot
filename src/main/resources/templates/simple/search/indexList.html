@@ -40,6 +40,7 @@
                 <th>docs.deleted</th>
                 <th>store.size</th>
                 <th>pri.store.size</th>
+                <th>삭제</th>
             </tr>
             </thead>
             <tbody>
@@ -55,7 +56,9 @@
                 <td th:text="${list.docsDeleted}"></td>
                 <td th:text="${list.storeSize}"></td>
                 <td th:text="${list.priStoreSize}"></td>
-
+                <td><a class="btn btn-danger" th:href="@{/simple/search/delete(service_id=${list.index})}"
+                       onclick="return confirm('index를 삭제할까요?');" ><span
+                        class="glyphicon glyphicon-scissors"></span>del</a></td>
             </tr>
         </table>
     </div>
