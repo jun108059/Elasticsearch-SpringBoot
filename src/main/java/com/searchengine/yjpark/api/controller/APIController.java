@@ -30,7 +30,6 @@ public class APIController {
     public RedirectView bulkIndex(@RequestParam(value = "service_id") String serviceId) {
         log.info("Bulk Get : {}", serviceId);
         // 서비스 로직 호출
-
         boolean bulkSuccess = indexService.bulkIndex(serviceId);
         log.info("bulkSuccess : {}", bulkSuccess);
         if (bulkSuccess) {
@@ -43,7 +42,6 @@ public class APIController {
     // simple/search/contents/{serviceId}/{keyWord}
     @PostMapping("/contents")
     public SearchResultResponse searchKeyword(@RequestBody Search search) {
-        // 클라이언트가 {서비스ID} + {검색단어} + {...} 선택 -> 검색 or JSON POST
         log.info("> Search POST Test : {}", search.toString());
         // 서비스 로직 호출
         SearchResultResponse searchResultResponse = new SearchResultResponse();

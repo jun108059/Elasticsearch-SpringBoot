@@ -24,9 +24,7 @@ public class ServiceService {
      * @param dataBaseInfo
      */
     public void registrationDB(DataBaseInfo dataBaseInfo) {
-
         serviceRepository.save(dataBaseInfo);
-//        return dataBaseInfo.getDbConnIp();
     }
 
 
@@ -43,7 +41,7 @@ public class ServiceService {
      * host 정보로 db Info 불러오기
      *
      * @param dbIdx
-     * @return
+     * @return 데이터베이스 정보 List
      */
     public List<DataBaseInfo> findDbByIdx(Long dbIdx) {
 
@@ -51,31 +49,19 @@ public class ServiceService {
     }
 
     /**
-     * host 정보로 db Info 불러오기
-     *
-     * @param host
-     * @return
-     */
-    public Optional<DataBaseInfo> findDbByHost(String host) {
-        return serviceRepository.findByHost(host);
-    }
-
-    /**
      * 서비스 등록
      *
-     * @param
-     * @return
+     * @param service
      */
     public void registrationService(Service service) {
 
         serviceRepository.saveService(service);
-//        return service.getServiceId();
     }
 
     /**
      * 전체 서비스 정보 조회
      *
-     * @return
+     * @return 서비스 List
      */
     public List<Service> findAllService() {
         return serviceRepository.findAllService();
@@ -84,6 +70,7 @@ public class ServiceService {
     /**
      * ID에 맞는 서비스 정보 조회
      *
+     * @param id
      * @return Service
      */
     public Service findServiceByID(String id) {

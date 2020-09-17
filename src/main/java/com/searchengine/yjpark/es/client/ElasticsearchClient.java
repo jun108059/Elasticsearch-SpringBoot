@@ -208,9 +208,7 @@ public class ElasticsearchClient {
             log.error("Search Response Fail : {}", e.getMessage());
         }
 
-        // Todo 빈 리스트 응답으로 줘도 됨
         return Response;
-        // 서비스 로직에서 Map으로 Source, highlighting 꺼내오기
     }
 
     /**
@@ -220,15 +218,9 @@ public class ElasticsearchClient {
      */
     public String getIndexList() {
         // 검색 엔진에 색인된 모든 index List 가져오기
-
-        // Todo Low Level로 리스트 가져오는거 만들어 오기
-
         String responseBody = "";
-        // High Level에 없음
         RestClient lowLevelClient = restHighLevelClient.getLowLevelClient();
 
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html
-        // https://stackoverflow.com/questions/54181844/how-to-get-the-total-count-of-documnets-present-in-an-index-using-java-high-leve/54185106#54185106
         Request request = new Request("GET", "/_cat/indices");
         try {
             Response response = lowLevelClient.performRequest(request);
@@ -244,6 +236,7 @@ public class ElasticsearchClient {
      * Document 존재 여부 검사 함수
      *
      * @param indexName
+     * @param documentId
      * @return boolean
      */
     public boolean isDocumentExist(String indexName, String documentId) {

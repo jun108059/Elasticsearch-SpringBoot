@@ -20,27 +20,33 @@ import java.util.Map;
 public class ServiceManagementController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-
     private final ServiceService serviceService;
 
     @Autowired
     IndexService indexService;
 
-
     public ServiceManagementController(ServiceService serviceService) {
         this.serviceService = serviceService;
     }
 
-    // DB 정보 등록하는 page 랜더링
+    /**
+     * DB 정보 등록하는 page 랜더링
+     *
+     * @return View page
+     */
     @GetMapping("/simple/createDBInfo")
     public String createForm() {
         return "simple/createDBInfo";
     }
 
-    // post로 전달받은 data 넣기
+    /**
+     * post로 전달받은 data 넣기
+     *
+     * @param form
+     * @return View page
+     */
     @PostMapping("/simple/createDBInfo")
     public String create(@ModelAttribute DataBaseInfo form) {
-//        System.out.println(form.getDbConnIp());
         DataBaseInfo dbInfo = new DataBaseInfo();
         dbInfo.setDbConnIp(form.getDbConnIp());
         dbInfo.setDbId(form.getDbId());
@@ -51,20 +57,29 @@ public class ServiceManagementController {
         return "redirect:/";
     }
 
-    // 서비스 등록하는 page 랜더링
+    /**
+     * 서비스 등록하는 page 랜더링
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/simple/serviceInfo")
     public String createService(Model model) {
         // 저장된 DB 정보 가져오기
         List<DataBaseInfo> dbInfo = serviceService.findAllDBInfo();
-        log.info("dbInfo : {}", dbInfo.get(1).getIdx());
         model.addAttribute("dbInfo", dbInfo);
         return "simple/serviceInfo";
     }
 
-    // post로 전달받은 data 넣기
+    /**
+     * post로 전달받은 data 넣기
+     *
+     * @param form
+     * @return
+     */
     @PostMapping("/simple/serviceInfo")
     public String create(@ModelAttribute Service form) {
-        log.info("Request Idx: {}", form.getDbIdx());
+
         Service service = new Service();
         service.setServiceId(form.getServiceId());
         service.setServiceDetail(form.getServiceDetail());
@@ -74,11 +89,15 @@ public class ServiceManagementController {
 
         serviceService.registrationService(service);
 
-        // return "redirect:/simple/search/bulk";
         return "redirect:/simple/serviceList";
     }
 
-    // 서비스 List Page 랜더링
+    /**
+     * 서비스 List Page 랜더링
+     *
+     * @param model
+     * @return View page
+     */
     @GetMapping("/simple/serviceList")
     public String serviceList(Model model) {
         // 저장된 Service 정보 가져오기
@@ -88,21 +107,26 @@ public class ServiceManagementController {
         return "simple/serviceList";
     }
 
-    // 색인된 인덱스 전체 띄우기
+    /**
+     * 색인된 인덱스 전체 띄우기
+     *
+     * @param form
+     * @param model
+     * @return View page
+     */
     @GetMapping("/simple/viewBulkIndex")
     public String getServiceId(@ModelAttribute Service form, Model model) {
-        // form 필요없음
-        // ES Client 에서 모든 index 리스트 조회하는 API 호출
-        // Model에 IndexList 만들고 addAttribute 하기
 
         List<Map<String, Object>> indexList = indexService.getAllIndices();
-
         model.addAttribute("indexList", indexList);
-
         return "simple/search/indexList";
     }
 
-    // Error page 랜더링
+    /**
+     * Error page 랜더링
+     *
+     * @return View page
+     */
     @GetMapping("/simple/error")
     public String errorPage() {
         return "simple/search/errorPage";
