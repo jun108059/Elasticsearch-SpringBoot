@@ -154,7 +154,7 @@ public class ElasticsearchClient {
 
         boolean result = false;
 
-        UpdateRequest request = new UpdateRequest("indexName", "documentId");
+        UpdateRequest request = new UpdateRequest(indexName, documentId);
         request.doc(jsonMap);
 
         try {
