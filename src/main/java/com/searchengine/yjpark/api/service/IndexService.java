@@ -116,17 +116,14 @@ public class IndexService {
         int pageNo = search.getPageNo();
 
         // Iterator 로 모든 Highlight 관련 값 가져오기
-        Iterator<Map.Entry<String, Object>> entries = columns.entrySet().iterator();
 
-        // Todo 나중에 for 문 줄이기
-        while (entries.hasNext()) { // highlight 의 key, value 매핑
-            Map.Entry<String, Object> entry = entries.next(); // Map.Entry 활용
+        // Map.Entry 활용
+        for (Map.Entry<String, Object> entry : columns.entrySet()) { // highlight 의 key, value 매핑
             if (entry.getKey().equals("columns")) { // columns 필드라면
                 List<Map<String, Object>> column = (List<Map<String, Object>>) entry.getValue();
                 log.info("for column : {}", column);
                 for (Map<String, Object> filed : column) {
                     // Search 할 필드 이름 넣기
-                    // Todo 위 선언부터 Map.Entry로 바꿔보기
                     for (Map.Entry<String, Object> filedVal : filed.entrySet()) {
                         columnNames.add(filedVal.getValue().toString());
                     }
@@ -155,15 +152,13 @@ public class IndexService {
         // 1-3. 하이라이트 query 만들어주는 Builder
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         // 1-4. 하이라이트할 field 지정하기
-        // Todo For loop을 돌려서 MatchQuery로 field 하나씩 검색하는 방법 적용해보기
         for (String field : columnNames) {
-            // Todo Test 돌려서 highlight 여러 개 되는지 확인하기
             HighlightBuilder.Field highlightText = new HighlightBuilder.Field(field);
             highlightText.highlighterType("unified");
             highlightBuilder.field(highlightText);
             highlightBuilder.preTags(prefixTag);
             highlightBuilder.postTags(postfixTag);
-            searchSourceBuilder.highlighter(highlightBuilder); // Todo 추가안해도 filed 명 바뀌면서 추가되는지
+            searchSourceBuilder.highlighter(highlightBuilder);
         }
         // 1-5 pagination
         searchSourceBuilder.from(pageNo);
@@ -184,7 +179,6 @@ public class IndexService {
         log.info("total hit : {}", numHits);
 
         SearchHits highlightHit = searchResponse.getHits();
-
 
         // 검색 결과 저장하는 for 문
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -211,6 +205,9 @@ public class IndexService {
 
     // 부분 색인 생성 - Create
     public void createDocument(Indexing indexing) {
+
+        List<String> columns = indexing.getColumns();
+        log.info("columns : {}", columns);
         // 1. 서비스 ID로 ES 인덱스 접근
         String indexId = indexing.getServiceId(); // 인덱스 id
         String documentId = indexing.getContentsIdValue(); // document id
