@@ -1,10 +1,21 @@
 package com.searchengine.yjpark.domain;
 
+import java.util.List;
+
 public class Indexing {
 
     private String serviceId;
     private String operationType;
     private String contentsIdValue;
+    private List<String> columns;
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<String> columns) {
+        this.columns = columns;
+    }
 
     public String getServiceId() {
         return serviceId;
