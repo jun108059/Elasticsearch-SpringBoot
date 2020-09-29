@@ -1,18 +1,41 @@
-[Untitled](https://www.notion.so/c858af447fb444b18bf4c8eae85487f5)
+# 3. 컨텐츠 검색 API 명세
 
-### **1.1.1 Request**
+## API
 
-### 1.1.1.1 Request Header
+| URI                     | Method   | 설명                 |
+| ----------------------- | -------- | -------------------- |
+| /simple/search/contents | **POST** | 검색 컨텐츠 조회 API |
 
-[Untitled](https://www.notion.so/5792ea9c18f745f88df3c5e955bfbfcc)
+- **Elasticsearch**에 저장된 전체 Index List 조회
+- 관리자 Page로 확인 가능
+- Index를 삭제할 수 있는 기능 제공
 
-### 1.1.1.2 Request Parameter
+## 3.1 Request
 
-클라이언트는 아래의 규격에 맞게 parameter를 세팅하여 요청한다.
+### 3.1.1 Request Header
 
-[Untitled](https://www.notion.so/b611269dfee4463d977f7bf33ff4437f)
+| Header       | Value            |
+| ------------ | ---------------- |
+| Content-Type | application/json |
 
-### 1.1.1.3 Request JSON 구조
+### 3.1.2 Request Parameter
+
+클라이언트는 아래의 규격에 맞게 parameter를 Setting하여 요청한다.
+
+| 데이터 항목             | 변수 이름      | 타입   | 비고                          |
+| ----------------------- | -------------- | ------ | ----------------------------- |
+| 서비스 아이디           | service_id     | String | Admin에서 등록한 서비스 ID값  |
+| 검색 단어               | search_texts   | String | 검색할 단어                   |
+| 결과 조회 컬럼          | result_columns | Array  | 결과 조회 컬럼 리스트         |
+| 하이라이트              | highlight      | Object | 하이라이터로 지정 정보        |
+| - 하이라이트 컬럼list   | columns        | Array  | 하이라이트로 지정할 컬럼 list |
+| - - 하이라이트 컬럼Name | column         | String | 하이라이트 컬럼 명            |
+| - 하이라이트 Prefix     | prefix_tag     | String | 하이라이트 Prefix             |
+| - 하이라이트 Postfix    | postfix_tag    | String | 하이라이트 Postfix            |
+| 페이지 크기             | page_size      | Int    | Default:10                    |
+| 페이지 번호             | page_no        | Int    | Default:1                     |
+
+### 3.1.3 Request JSON 구조
 
 ```json
 {   
@@ -30,30 +53,34 @@
         "prerfix_tag": "<b>",
         "postfix_tag": "</b>"
     },
-      
     "page_size": 10,
-    "page_no": 1,
-    
+    "page_no": 1
+  
 }
 ```
 
-### 1.1.2 Response
+## 3.2 Response
 
-### 1.1.2.1 Response Code
+### 3.2.1 Response Code
 
-Normal: Ok (200)
+- **Normal**: Ok (200)
+- **Error**: Bad Request (400), Not Found (404), Internal Server Error (500), Service Unavailable (503)
 
-데이터 없을 시: No Content (204)
+### 3.2.2 Response Parameter
 
-Error: Bad Request (400), Not Found (404), Internal Server Error (500), Service Unavailable (503)
+서버는 아래의 규격에 맞게 parameter를 Setting하여 응답한다.
 
-### 1.1.2.2 Response Parameter
+| 데이터 항목            | 변수 이름 | 타입   | 비고                                                                                  |
+| ---------------------- | --------- | ------ | ------------------------------------------------------------------------------------- |
+| 전체 건수              | total     | Int    |                                                                                       |
+| 페이지                 | page      | Object | -                                                                                     |
+| 페이지 사이즈          | page_size | Int    | -                                                                                     |
+| 결과                   | result    | Array  | -                                                                                     |
+| 결과 조회 컬럼들       | -         | -      | 요청 전문의 검색 결과 조회 컬럼에 지정된 컬럼 정보                                    |
+| 하이라이트 결과        | highlight | Array  | -                                                                                     |
+| 하이라이트 결과 컬럼들 | -         | -      | 요청 전문의 하이라이트 조회 컬럼에 지정된 컬럼 정보(하이라이트 결과 없을시 원본 내용) |
 
-서버는 아래의 규격에 맞게 parameter를 세팅하여 응답한다.
-
-[Untitled](https://www.notion.so/33820d35cc244970a81f5a628ab64e57)
-
-### 1.1.2.3 Response JSON 구조
+### 3.2.3 Request JSON 구조
 
 ```json
 {   
@@ -95,7 +122,8 @@ Error: Bad Request (400), Not Found (404), Internal Server Error (500), Service 
             "notice_fl": "n",
             "mem_type": "",
             "direct_fl": "n",
-            "author": "콘텐츠기획팀 채용속보파트 강해미",
+            "auth
+or": "콘텐츠기획팀 채용속보파트 강해미",
             "mobile_notice_fl": "n",
             "title": "[㈜KTM&S] 2013년 상반기 공채가 떴다!! (진행중)",
             "main_display_fl": "n",
